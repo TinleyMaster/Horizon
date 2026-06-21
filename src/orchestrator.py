@@ -1,6 +1,7 @@
 """Main orchestrator coordinating the entire workflow."""
 
 import asyncio
+import json
 from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
@@ -98,6 +99,14 @@ class HorizonOrchestrator:
                     f"🔗 Merged {len(all_items) - len(merged_items)} cross-source duplicates "
                     f"→ {len(merged_items)} unique items\n"
                 )
+
+            # 3.5 Keyword pre-filter: skip irrelevant items before AI analysis (saves tokens)
+            filtered_items, skip_count = self._prefilter_by_keywords(merged_items)
+            if skip_count > 0:
+                self.console.print(
+                    f"[Keyword pre-filter] {skip_count} skipped (no keyword match), {len(filtered_items)} passed to AI\n"
+                )
+            merged_items = filtered_items
 
             # 4. Analyze with AI
             analyzed_items = await self._analyze_content(merged_items)
@@ -241,6 +250,28 @@ class HorizonOrchestrator:
             hours = self.config.filtering.time_window_hours
             since = datetime.now(timezone.utc) - timedelta(hours=hours)
         return since
+
+    def _load_prefilter_keywords(self) -> list:
+        try:
+            raw = json.loads(open(str(self.storage.config_path), encoding='utf-8').read())
+            return raw.get('filtering', {}).get('pre_filter_keywords', [])
+        except Exception:
+            return []
+
+    def _prefilter_by_keywords(self, items: list) -> tuple:
+        keywords = self._load_prefilter_keywords()
+        if not keywords:
+            return items, 0
+        kw_lower = [k.lower() for k in keywords]
+        matched = []
+        skipped = 0
+        for item in items:
+            text = f"{item.title or ''} {item.ai_summary or ''} {item.content or ''}".lower()
+            if any(kw in text for kw in kw_lower):
+                matched.append(item)
+            else:
+                skipped += 1
+        return matched, skipped
 
     async def fetch_all_sources(self, since: datetime) -> List[ContentItem]:
         """Fetch content from all configured sources.

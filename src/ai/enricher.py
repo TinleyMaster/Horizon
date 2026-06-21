@@ -13,7 +13,7 @@ import os
 from typing import List, Optional
 from tenacity import retry, stop_after_attempt, wait_exponential
 from rich.progress import Progress, SpinnerColumn, BarColumn, TextColumn, MofNCompleteColumn
-from ddgs import DDGS
+import asyncio
 
 from .client import AIClient
 from .prompts import (
@@ -50,8 +50,11 @@ class ContentEnricher:
                 try:
                     await self._enrich_item(item)
                 except Exception as e:
-                    print(f"Error enriching item {item.id}: {e}, falling back to translation")
-                    await self._translate_item(item)
+                    print(f"  [跳过Enrichment] {item.id}: {e}")
+                    try:
+                        await self._translate_item(item)
+                    except Exception as e2:
+                        print(f"  [跳过翻译] {item.id}: {e2}")
             progress.advance(progress_task)
 
         with Progress(

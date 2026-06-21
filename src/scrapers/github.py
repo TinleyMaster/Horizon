@@ -87,7 +87,7 @@ class GitHubScraper(BaseScraper):
         try:
             response = await self.client.get(url, headers=self._get_headers(), follow_redirects=True)
             response.raise_for_status()
-            events = response.json()
+            events = response.json()[:5]
 
             for event in events:
                 created_at = datetime.fromisoformat(
@@ -190,7 +190,7 @@ class GitHubScraper(BaseScraper):
         try:
             response = await self.client.get(url, headers=self._get_headers(), follow_redirects=True)
             response.raise_for_status()
-            releases = response.json()
+            releases = response.json()[:5]
 
             for release in releases:
                 published_at = datetime.fromisoformat(
