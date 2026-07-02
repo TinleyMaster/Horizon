@@ -121,7 +121,9 @@ def test_balanced_digest_reserves_one_item_per_configured_group_when_possible() 
     assert result.group_counts == {"macro": 1, "ai": 1, "crypto": 1}
 
 
-def test_investor_category_override_prefers_finance_keywords_over_source_category() -> None:
+def test_investor_category_override_prefers_finance_keywords_over_source_category() -> (
+    None
+):
     orchestrator = make_orchestrator(FilteringConfig())
     item = make_item("tradeweb", 8.0, "crypto-web3")
     item.title = "Tradeweb executes first U.S. Treasury transaction on Canton Network"
@@ -149,6 +151,35 @@ def test_investor_category_override_maps_geopolitics_sources() -> None:
 
     assert item.metadata["category"] == "geopolitics"
     assert item.metadata["category_inferred_from"] == "source_map"
+
+
+def test_investor_category_override_maps_added_finance_and_geopolitics_sources() -> (
+    None
+):
+    orchestrator = make_orchestrator(FilteringConfig())
+    finance_item = ContentItem(
+        id="twitter:tweet:2",
+        source_type=SourceType.TWITTER,
+        title="@WalterBloomberg: Treasury auction and SOFR update",
+        url="https://example.com/finance",
+        author="WalterBloomberg",
+        published_at=datetime.now(timezone.utc),
+        metadata={},
+    )
+    geo_item = ContentItem(
+        id="reddit:subreddit:1",
+        source_type=SourceType.REDDIT,
+        title="Shipping security updates",
+        url="https://example.com/geo-reddit",
+        author="analyst",
+        published_at=datetime.now(timezone.utc),
+        metadata={"subreddit": "CredibleDefense"},
+    )
+
+    orchestrator._apply_investor_category_overrides([finance_item, geo_item])
+
+    assert finance_item.metadata["category"] == "finance"
+    assert geo_item.metadata["category"] == "geopolitics"
 
 
 def test_max_items_works_without_category_groups() -> None:
@@ -237,7 +268,9 @@ def test_run_applies_balanced_digest_before_enrichment(tmp_path, monkeypatch) ->
     monkeypatch.setattr(orchestrator, "fetch_all_sources", fetch_all_sources)
     monkeypatch.setattr(orchestrator, "_analyze_content", analyze_content)
     monkeypatch.setattr(orchestrator, "merge_topic_duplicates", merge_topic_duplicates)
-    monkeypatch.setattr(orchestrator, "_expand_twitter_discussion", expand_twitter_discussion)
+    monkeypatch.setattr(
+        orchestrator, "_expand_twitter_discussion", expand_twitter_discussion
+    )
     monkeypatch.setattr(orchestrator, "_enrich_important_items", enrich_important_items)
     monkeypatch.chdir(tmp_path)
 

@@ -238,6 +238,22 @@
           "min_score": 40
         },
         {
+          "subreddit": "CredibleDefense",
+          "enabled": true,
+          "sort": "hot",
+          "time_filter": "day",
+          "fetch_limit": 8,
+          "min_score": 25
+        },
+        {
+          "subreddit": "Economics",
+          "enabled": true,
+          "sort": "hot",
+          "time_filter": "day",
+          "fetch_limit": 8,
+          "min_score": 20
+        },
+        {
           "subreddit": "MachineLearning",
           "enabled": true,
           "sort": "hot",
@@ -269,17 +285,23 @@
         "LynAldenContact",
         "TheStalwart",
         "financialjuice",
+        "WalterBloomberg",
+        "LizAnnSonders",
+        "MacroAlf",
         "karpathy",
         "swyx",
         "VitalikButerin",
         "tokenterminal",
         "sentdefender",
-        "Osinttechnical"
+        "Osinttechnical",
+        "Faytuks",
+        "ConflictNews",
+        "ragipsoylu"
       ],
-      "fetch_limit": 10,
+      "fetch_limit": 14,
       "fetch_reply_text": true,
       "max_replies_per_tweet": 3,
-      "max_tweets_to_expand": 8,
+      "max_tweets_to_expand": 10,
       "reply_min_likes": 10,
       "apify_token_env": "APIFY_TOKEN",
       "actor_id": "altimis~scweet",
