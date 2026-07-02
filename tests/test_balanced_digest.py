@@ -182,6 +182,66 @@ def test_investor_category_override_maps_added_finance_and_geopolitics_sources()
     assert geo_item.metadata["category"] == "geopolitics"
 
 
+def test_investor_category_override_ignores_comment_noise_for_hackernews() -> None:
+    orchestrator = make_orchestrator(FilteringConfig())
+    item = ContentItem(
+        id="hackernews:item:1",
+        source_type=SourceType.HACKERNEWS,
+        title="First synthetic cell that can grow and divide",
+        url="https://example.com/hn-tech",
+        content=(
+            "Researchers built a synthetic cell capable of growth.\n"
+            "--- Top Comments ---\n"
+            "[analyst]: This could change war and military logistics."
+        ),
+        published_at=datetime.now(timezone.utc),
+        metadata={},
+    )
+
+    orchestrator._apply_investor_category_overrides([item])
+
+    assert item.metadata["category"] == "tech"
+    assert item.metadata["category_inferred_from"] == "content_score"
+
+
+def test_investor_category_override_prefers_tech_for_cloudflare_protocol_story() -> (
+    None
+):
+    orchestrator = make_orchestrator(FilteringConfig())
+    item = ContentItem(
+        id="rss:item:cloudflare",
+        source_type=SourceType.RSS,
+        title="Cloudflare monetization gateway charges for resources via x402",
+        url="https://example.com/cloudflare",
+        published_at=datetime.now(timezone.utc),
+        metadata={},
+    )
+
+    orchestrator._apply_investor_category_overrides([item])
+
+    assert item.metadata["category"] == "tech"
+
+
+def test_investor_category_override_records_secondary_category_for_crossover_story() -> (
+    None
+):
+    orchestrator = make_orchestrator(FilteringConfig())
+    item = ContentItem(
+        id="rss:item:meta",
+        source_type=SourceType.RSS,
+        title="Meta AI release sparks global AI stock selloff",
+        url="https://example.com/meta",
+        published_at=datetime.now(timezone.utc),
+        metadata={},
+    )
+
+    orchestrator._apply_investor_category_overrides([item])
+
+    assert item.metadata["category"] in {"ai", "finance"}
+    assert item.metadata.get("secondary_category") in {"ai", "finance"}
+    assert item.metadata["category"] != item.metadata["secondary_category"]
+
+
 def test_max_items_works_without_category_groups() -> None:
     filtering = FilteringConfig(max_items=1)
     items = [make_item("lower", 7.0, None), make_item("higher", 9.0, None)]

@@ -51,6 +51,18 @@ TWITTER_CATEGORY_MAP = {
     "tokenterminal": "crypto-web3",
 }
 
+SCORABLE_CATEGORIES = (
+    "ai",
+    "tech",
+    "finance",
+    "geopolitics",
+    "crypto-web3",
+    "macro-policy",
+    "china-policy",
+    "us-equities",
+    "a-share",
+)
+
 REDDIT_CATEGORY_MAP = {
     "investing": "finance",
     "securityanalysis": "finance",
@@ -74,6 +86,77 @@ GITHUB_CATEGORY_MAP = {
     "ethereum/go-ethereum": "crypto-web3",
     "solana-labs/solana": "crypto-web3",
 }
+
+AI_KEYWORDS = (
+    " ai ",
+    "llm",
+    "language model",
+    "machine learning",
+    "openai",
+    "anthropic",
+    "claude",
+    "gemini",
+    "deepseek",
+    "gpt-",
+    "foundation model",
+    "inference",
+    "training run",
+    "rag",
+    "agent",
+    "multimodal",
+    "reasoning model",
+)
+
+TECH_KEYWORDS = (
+    "cloudflare",
+    "x402",
+    "synthetic cell",
+    "biotech",
+    "biology",
+    "genome",
+    "open source",
+    "open-source",
+    "robot",
+    "robotics",
+    "playstation",
+    "disc",
+    "optical",
+    "hardware",
+    "software",
+    "semiconductor",
+    "chip",
+    "chips",
+    "gpu",
+    "cpu",
+    "amd",
+    "nvidia",
+    "intel",
+    "protocol",
+    "browser",
+    "developer tool",
+    "api gateway",
+    "game console",
+    "storage media",
+    "engineering",
+    "diy",
+)
+
+CRYPTO_KEYWORDS = (
+    "blockchain",
+    "crypto",
+    "web3",
+    "defi",
+    "stablecoin",
+    "ethereum",
+    "bitcoin",
+    "solana",
+    "dex",
+    "token",
+    "wallet",
+    "onchain",
+    "layer 2",
+    "rollup",
+)
 
 FINANCE_KEYWORDS = (
     "fomc",
@@ -123,6 +206,52 @@ FINANCE_KEYWORDS = (
     "s&p 500",
 )
 
+MACRO_POLICY_KEYWORDS = (
+    "fomc",
+    "federal reserve",
+    "fed",
+    "cpi",
+    "pce",
+    "payroll",
+    "nonfarm",
+    "inflation",
+    "rate cut",
+    "rate hike",
+    "central bank",
+    "ecb",
+    "boj",
+    "pboc",
+    "liquidity",
+)
+
+CHINA_POLICY_KEYWORDS = (
+    "工信部",
+    "发改委",
+    "国务院",
+    "证监会",
+    "央行",
+    "pbo c",
+    "中国人民银行",
+    "产业政策",
+    "出口退税",
+    "算力",
+    "新质生产力",
+    "补贴",
+    "地方政府",
+)
+
+US_EQUITIES_KEYWORDS = (
+    "shares",
+    "stock falls",
+    "stock jumps",
+    "guidance",
+    "earnings",
+    "nasdaq",
+    "nyse",
+    "s&p 500",
+    "dow jones",
+)
+
 GEOPOLITICS_KEYWORDS = (
     "war",
     "ceasefire",
@@ -154,6 +283,17 @@ GEOPOLITICS_KEYWORDS = (
     "navy",
     "troop",
 )
+
+CATEGORY_KEYWORDS = {
+    "ai": AI_KEYWORDS,
+    "tech": TECH_KEYWORDS,
+    "finance": FINANCE_KEYWORDS,
+    "geopolitics": GEOPOLITICS_KEYWORDS,
+    "crypto-web3": CRYPTO_KEYWORDS,
+    "macro-policy": MACRO_POLICY_KEYWORDS,
+    "china-policy": CHINA_POLICY_KEYWORDS,
+    "us-equities": US_EQUITIES_KEYWORDS,
+}
 
 
 @dataclass
@@ -428,31 +568,52 @@ class HorizonOrchestrator:
     def _apply_investor_category_overrides(self, items: List[ContentItem]) -> None:
         """Reclassify items for investor-facing boards using source and content hints."""
         for item in items:
-            category, reason = self._infer_investor_category(item)
+            category, reason, secondary_category = self._infer_investor_category(item)
             if not category:
                 continue
             item.metadata["category"] = category
             item.metadata["category_inferred_from"] = reason
+            if secondary_category:
+                item.metadata["secondary_category"] = secondary_category
 
     def _infer_investor_category(
         self, item: ContentItem
-    ) -> tuple[Optional[str], Optional[str]]:
+    ) -> tuple[Optional[str], Optional[str], Optional[str]]:
         meta = item.metadata
-        existing = meta.get("category")
-        text = self._build_classification_text(item)
-
-        if self._contains_any_keyword(text, GEOPOLITICS_KEYWORDS):
-            return "geopolitics", "keyword"
-        if self._contains_any_keyword(text, FINANCE_KEYWORDS):
-            return "finance", "keyword"
-
+        existing = str(meta.get("category") or "").strip()
         source_category = self._infer_source_category(item)
-        if source_category:
-            return source_category, "source_map"
+        scores = self._score_investor_categories(item, source_category, existing)
+        ranked = sorted(
+            (
+                (category, score)
+                for category, score in scores.items()
+                if score > 0 and category in SCORABLE_CATEGORIES
+            ),
+            key=lambda pair: pair[1],
+            reverse=True,
+        )
+        if not ranked:
+            return None, None, None
 
-        if isinstance(existing, str) and existing.strip():
-            return existing, "config"
-        return None, None
+        category, top_score = ranked[0]
+        if top_score < 3:
+            if existing and existing in SCORABLE_CATEGORIES:
+                return existing, "config", None
+            return None, None, None
+
+        reason = "content_score"
+        if source_category and category == source_category and top_score <= 4:
+            reason = "source_map"
+        elif existing and category == existing and top_score <= 4:
+            reason = "config"
+
+        secondary_category = None
+        if len(ranked) > 1:
+            next_category, next_score = ranked[1]
+            if next_score >= max(3, top_score - 2):
+                secondary_category = next_category
+
+        return category, reason, secondary_category
 
     def _infer_source_category(self, item: ContentItem) -> Optional[str]:
         meta = item.metadata
@@ -471,16 +632,80 @@ class HorizonOrchestrator:
         meta = item.metadata
         parts = [
             item.title or "",
-            item.content or "",
             item.ai_summary or "",
             item.ai_reason or "",
             " ".join(item.ai_tags or []),
+            self._extract_primary_body_for_classification(item),
             str(meta.get("feed_name") or ""),
             str(meta.get("subreddit") or ""),
             str(meta.get("repo") or ""),
             str(meta.get("watchlist") or ""),
         ]
         return " ".join(parts).lower()
+
+    def _score_investor_categories(
+        self,
+        item: ContentItem,
+        source_category: Optional[str],
+        existing_category: str,
+    ) -> Dict[str, int]:
+        meta = item.metadata
+        title_text = (item.title or "").lower()
+        summary_text = " ".join(
+            [item.ai_summary or "", item.ai_reason or "", " ".join(item.ai_tags or [])]
+        ).lower()
+        body_text = self._extract_primary_body_for_classification(item)
+        source_text = " ".join(
+            [
+                str(meta.get("feed_name") or ""),
+                str(meta.get("subreddit") or ""),
+                str(meta.get("repo") or ""),
+                str(meta.get("watchlist") or ""),
+            ]
+        ).lower()
+        scores: Dict[str, int] = defaultdict(int)
+
+        for category, keywords in CATEGORY_KEYWORDS.items():
+            title_hits = self._count_keyword_matches(title_text, keywords)
+            summary_hits = self._count_keyword_matches(summary_text, keywords)
+            body_hits = self._count_keyword_matches(body_text, keywords)
+            source_hits = self._count_keyword_matches(source_text, keywords)
+            scores[category] += title_hits * 4
+            scores[category] += summary_hits * 3
+            scores[category] += body_hits
+            scores[category] += source_hits * 2
+
+        if source_category:
+            scores[source_category] += 2
+        if existing_category in SCORABLE_CATEGORIES:
+            curated_sources = {"rss", "openbb"}
+            scores[existing_category] += (
+                3 if item.source_type.value in curated_sources else 1
+            )
+
+        return scores
+
+    def _extract_primary_body_for_classification(self, item: ContentItem) -> str:
+        content = item.content or ""
+        if not content:
+            return ""
+
+        markers = (
+            "\n--- Top Comments ---",
+            "\n--- Comments ---",
+            "\nTop comments:",
+            "\nTop discussion:",
+        )
+        for marker in markers:
+            if marker in content:
+                content = content.split(marker, 1)[0]
+                break
+        return content.lower()
+
+    def _count_keyword_matches(self, text: str, keywords: tuple[str, ...]) -> int:
+        if not text:
+            return 0
+        return sum(1 for keyword in keywords if keyword in text)
 
     def _contains_any_keyword(self, text: str, keywords: tuple[str, ...]) -> bool:
         return any(keyword in text for keyword in keywords)
