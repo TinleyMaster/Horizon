@@ -21,6 +21,9 @@ LABELS = {
     "en": {
         "header": "Horizon Daily",
         "source": "Source",
+        "whats_new": "What Happened",
+        "investor_impact": "Investor Impact",
+        "key_details": "Key Details",
         "background": "Background",
         "discussion": "Discussion",
         "references": "References",
@@ -41,6 +44,9 @@ LABELS = {
     "zh": {
         "header": "Horizon 每日速递",
         "source": "来源",
+        "whats_new": "发生了什么",
+        "investor_impact": "投资影响",
+        "key_details": "关键信息",
         "background": "背景",
         "discussion": "社区讨论",
         "references": "参考链接",
@@ -159,7 +165,10 @@ class DailySummarizer:
             toc_entries.append(f"{i + 1}. [{t}](#item-{i + 1}) \u2b50\ufe0f {score}/10")
         toc = "\n".join(toc_entries) + "\n\n---\n\n"
 
-        parts = [self._format_item(item, labels, language, i + 1) for i, item in enumerate(items)]
+        parts = [
+            self._format_item(item, labels, language, i + 1)
+            for i, item in enumerate(items)
+        ]
 
         return header + toc + "".join(parts)
 
@@ -205,16 +214,30 @@ class DailySummarizer:
     ) -> str:
         """Generate one item message for multi-message webhook delivery."""
         labels = LABELS.get(language, LABELS["en"])
-        prefix = f"第 {index}/{total} 条\n\n" if language == "zh" else f"Item {index}/{total}\n\n"
+        prefix = (
+            f"第 {index}/{total} 条\n\n"
+            if language == "zh"
+            else f"Item {index}/{total}\n\n"
+        )
         return prefix + self._format_item(item, labels, language, index).rstrip("-\n ")
 
-    def _format_item(self, item: ContentItem, labels: dict, language: str, index: int) -> str:
+    def _format_item(
+        self, item: ContentItem, labels: dict, language: str, index: int
+    ) -> str:
         """Format a single ContentItem into Markdown."""
         title = self.format_display_title(item, language)
         url = str(item.url)
         score = item.ai_score or "?"
         meta = item.metadata
 
+        whats_new = meta.get(f"whats_new_{language}") or ""
+        why_it_matters = (
+            meta.get(f"why_it_matters_{language}")
+            or meta.get("why_it_matters")
+            or item.ai_reason
+            or ""
+        )
+        key_details = meta.get(f"key_details_{language}") or ""
         summary = (
             meta.get(f"detailed_summary_{language}")
             or meta.get("detailed_summary")
@@ -229,6 +252,9 @@ class DailySummarizer:
         )
 
         if language == "zh":
+            whats_new = _pangu(whats_new)
+            why_it_matters = _pangu(why_it_matters)
+            key_details = _pangu(key_details)
             summary = _pangu(summary)
             background = _pangu(background)
             discussion = _pangu(discussion)
@@ -257,16 +283,30 @@ class DailySummarizer:
         if discussion_url:
             discussion_url = str(discussion_url)
             if discussion_url != url:
-                source_line += f' · [{labels["discussion"]}]({discussion_url})'
+                source_line += f" · [{labels['discussion']}]({discussion_url})"
 
         lines = [
             f'<a id="item-{index}"></a>',
             f"## [{title}]({url}) \u2b50\ufe0f {score}/10",  # ⭐️
             "",
-            summary,
-            "",
-            source_line,
         ]
+
+        if whats_new:
+            lines.append(f"**{labels['whats_new']}**: {whats_new}")
+            lines.append("")
+        elif summary:
+            lines.append(summary)
+            lines.append("")
+
+        if why_it_matters:
+            lines.append(f"**{labels['investor_impact']}**: {why_it_matters}")
+            lines.append("")
+
+        if key_details:
+            lines.append(f"**{labels['key_details']}**: {key_details}")
+            lines.append("")
+
+        lines.append(source_line)
 
         if background:
             lines.append("")
@@ -274,10 +314,12 @@ class DailySummarizer:
 
         sources = meta.get("sources") or []
         if sources:
-            items_html = "".join(f'<li><a href="{s["url"]}">{s["title"]}</a></li>\n' for s in sources)
+            items_html = "".join(
+                f'<li><a href="{s["url"]}">{s["title"]}</a></li>\n' for s in sources
+            )
             lines += [
                 "",
-                f'<details><summary>{labels["references"]}</summary>\n<ul>\n{items_html}\n</ul>\n</details>',
+                f"<details><summary>{labels['references']}</summary>\n<ul>\n{items_html}\n</ul>\n</details>",
             ]
 
         if discussion:
@@ -294,7 +336,9 @@ class DailySummarizer:
 
         return "\n".join(lines) + "\n\n"
 
-    def _generate_empty_summary(self, date: str, total_fetched: int, labels: dict) -> str:
+    def _generate_empty_summary(
+        self, date: str, total_fetched: int, labels: dict
+    ) -> str:
         """Generate summary when no high-scoring items were found."""
         return (
             f"# {labels['header']} - {date}\n\n"

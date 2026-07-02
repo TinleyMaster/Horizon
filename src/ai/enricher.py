@@ -212,6 +212,7 @@ class ContentEnricher:
             for field in ("whats_new", "why_it_matters", "key_details"):
                 text = result.get(f"{field}_{lang}", "").strip()
                 if text:
+                    item.metadata[f"{field}_{lang}"] = text
                     parts.append(text)
             if parts:
                 item.metadata[f"detailed_summary_{lang}"] = " ".join(parts)

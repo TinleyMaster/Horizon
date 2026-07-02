@@ -405,20 +405,20 @@
     }
   },
   "filtering": {
-    "ai_score_threshold": 5.8,
+    "ai_score_threshold": 5.0,
     "time_window_hours": 24,
-    "max_items": 18,
+    "max_items": 24,
     "category_groups": {
       "macro": {
         "name": "Macro Policy",
-        "limit": 3,
+        "limit": 4,
         "categories": [
           "macro-policy"
         ]
       },
       "china_policy": {
         "name": "China Policy",
-        "limit": 3,
+        "limit": 4,
         "categories": [
           "china-policy"
         ]
@@ -439,42 +439,42 @@
       },
       "us_equities": {
         "name": "US Equities",
-        "limit": 2,
+        "limit": 3,
         "categories": [
           "us-equities"
         ]
       },
       "china_assets": {
         "name": "China Assets",
-        "limit": 2,
+        "limit": 3,
         "categories": [
           "a-share"
         ]
       },
       "crypto": {
         "name": "Crypto",
-        "limit": 2,
+        "limit": 3,
         "categories": [
           "crypto-web3"
         ]
       },
       "ai": {
         "name": "AI",
-        "limit": 2,
+        "limit": 4,
         "categories": [
           "ai"
         ]
       },
       "tech": {
         "name": "Tech",
-        "limit": 2,
+        "limit": 4,
         "categories": [
           "tech"
         ]
       }
     },
     "default_group": "other",
-    "default_group_limit": 2
+    "default_group_limit": 4
   },
   "webhook": {
     "enabled": true,

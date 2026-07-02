@@ -60,6 +60,40 @@ def test_generate_webhook_item_renders_single_item_detail():
     assert "**Tags**: `#AI`, `#News`" in result
 
 
+def test_generate_webhook_item_shows_investor_sections_when_enriched():
+    summarizer = DailySummarizer()
+    item = _make_item(1)
+    item.metadata["whats_new_zh"] = "Anthropic 发布了新模型。"
+    item.metadata["why_it_matters_zh"] = "这会影响大模型应用和相关产业链预期。"
+    item.metadata["key_details_zh"] = "新模型聚焦长上下文与代理能力。"
+
+    result = summarizer.generate_webhook_item(
+        item,
+        language="zh",
+        index=1,
+        total=1,
+    )
+
+    assert "**发生了什么**: Anthropic 发布了新模型。" in result
+    assert "**投资影响**: 这会影响大模型应用和相关产业链预期。" in result
+    assert "**关键信息**: 新模型聚焦长上下文与代理能力。" in result
+
+
+def test_generate_webhook_item_falls_back_to_ai_reason_for_investor_impact():
+    summarizer = DailySummarizer()
+    item = _make_item(1)
+    item.ai_reason = "Could move AI infrastructure spending expectations."
+
+    result = summarizer.generate_webhook_item(
+        item,
+        language="en",
+        index=1,
+        total=1,
+    )
+
+    assert "**Investor Impact**: Could move AI infrastructure spending expectations." in result
+
+
 def test_generate_webhook_item_includes_discussion_link_when_distinct():
     summarizer = DailySummarizer()
     item = _make_item(1)
