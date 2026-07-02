@@ -54,7 +54,9 @@ class HorizonOrchestrator:
         self.config = config
         self.storage = storage
         self.console = Console()
-        self.email_manager = EmailManager(config.email, console=self.console) if config.email else None
+        self.email_manager = (
+            EmailManager(config.email, console=self.console) if config.email else None
+        )
         self.webhook_notifier = (
             WebhookNotifier(config.webhook, console=self.console)
             if config.webhook and config.webhook.enabled
@@ -67,7 +69,9 @@ class HorizonOrchestrator:
         Args:
             force_hours: Optional override for time window in hours
         """
-        self.console.print("[bold cyan]🌅 Horizon - Starting aggregation...[/bold cyan]\n")
+        self.console.print(
+            "[bold cyan]🌅 Horizon - Starting aggregation...[/bold cyan]\n"
+        )
 
         # Check email subscriptions if configured
         if (
@@ -82,7 +86,9 @@ class HorizonOrchestrator:
         try:
             # 1. Determine time window
             since = self._determine_time_window(force_hours)
-            self.console.print(f"📅 Fetching content since: {since.strftime('%Y-%m-%d %H:%M:%S')}\n")
+            self.console.print(
+                f"📅 Fetching content since: {since.strftime('%Y-%m-%d %H:%M:%S')}\n"
+            )
 
             # 2. Fetch content from all sources
             all_items = await self.fetch_all_sources(since)
@@ -115,7 +121,8 @@ class HorizonOrchestrator:
             # 5. Filter by score threshold
             threshold = self.config.filtering.ai_score_threshold
             important_items = [
-                item for item in analyzed_items
+                item
+                for item in analyzed_items
                 if item.ai_score and item.ai_score >= threshold
             ]
             important_items.sort(key=lambda x: x.ai_score or 0, reverse=True)
@@ -156,11 +163,17 @@ class HorizonOrchestrator:
             today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
             for lang in self.config.ai.languages:
                 summarizer = DailySummarizer()
-                summary = await summarizer.generate_summary(important_items, today, len(all_items), language=lang)
+                summary = await summarizer.generate_summary(
+                    important_items, today, len(all_items), language=lang
+                )
 
                 # Save to data/summaries/
-                summary_path = self.storage.save_daily_summary(today, summary, language=lang)
-                self.console.print(f"💾 Saved {lang.upper()} summary to: {summary_path}\n")
+                summary_path = self.storage.save_daily_summary(
+                    today, summary, language=lang
+                )
+                self.console.print(
+                    f"💾 Saved {lang.upper()} summary to: {summary_path}\n"
+                )
 
                 # Copy to docs/ for GitHub Pages
                 try:
@@ -176,7 +189,7 @@ class HorizonOrchestrator:
                     front_matter = (
                         "---\n"
                         "layout: default\n"
-                        f"title: \"Horizon Summary: {today} ({lang.upper()})\"\n"
+                        f'title: "Horizon Summary: {today} ({lang.upper()})"\n'
                         f"date: {today}\n"
                         f"lang: {lang}\n"
                         "---\n\n"
@@ -193,12 +206,20 @@ class HorizonOrchestrator:
                     with open(dest_path, "w", encoding="utf-8") as f:
                         f.write(front_matter + summary_content)
 
-                    self.console.print(f"📄 Copied {lang.upper()} summary to GitHub Pages: {dest_path}\n")
+                    self.console.print(
+                        f"📄 Copied {lang.upper()} summary to GitHub Pages: {dest_path}\n"
+                    )
                 except Exception as e:
-                    self.console.print(f"[yellow]⚠️  Failed to copy {lang.upper()} summary to docs/: {e}[/yellow]\n")
+                    self.console.print(
+                        f"[yellow]⚠️  Failed to copy {lang.upper()} summary to docs/: {e}[/yellow]\n"
+                    )
 
                 # Send email if configured
-                if self.email_manager and self.config.email and self.config.email.enabled:
+                if (
+                    self.email_manager
+                    and self.config.email
+                    and self.config.email.enabled
+                ):
                     self.console.print(f"📧 Sending {lang.upper()} email summary...")
                     subscribers = self.storage.load_subscribers()
                     subject = f"Horizon Summary ({lang.upper()}) - {today}"
@@ -215,7 +236,9 @@ class HorizonOrchestrator:
                         summarizer=summarizer,
                     )
 
-            self.console.print("[bold green]✅ Horizon completed successfully![/bold green]")
+            self.console.print(
+                "[bold green]✅ Horizon completed successfully![/bold green]"
+            )
             usage = get_usage_snapshot()
             if usage.total_tokens > 0:
                 self.console.print(
@@ -295,7 +318,9 @@ class HorizonOrchestrator:
             # Hacker News
             if self.config.sources.hackernews.enabled:
                 hn_scraper = HackerNewsScraper(self.config.sources.hackernews, client)
-                tasks.append(self._fetch_with_progress("Hacker News", hn_scraper, since))
+                tasks.append(
+                    self._fetch_with_progress("Hacker News", hn_scraper, since)
+                )
 
             # RSS feeds
             if self.config.sources.rss:
@@ -310,7 +335,9 @@ class HorizonOrchestrator:
             # Telegram
             if self.config.sources.telegram.enabled:
                 telegram_scraper = TelegramScraper(self.config.sources.telegram, client)
-                tasks.append(self._fetch_with_progress("Telegram", telegram_scraper, since))
+                tasks.append(
+                    self._fetch_with_progress("Telegram", telegram_scraper, since)
+                )
 
             # Twitter (Apify or Playwright mode)
             if self.config.sources.twitter and self.config.sources.twitter.enabled:
@@ -319,7 +346,9 @@ class HorizonOrchestrator:
                     twitter_scraper = TwitterPlaywrightScraper(tw_cfg)
                 else:
                     twitter_scraper = TwitterScraper(tw_cfg, client)
-                tasks.append(self._fetch_with_progress("Twitter", twitter_scraper, since))
+                tasks.append(
+                    self._fetch_with_progress("Twitter", twitter_scraper, since)
+                )
 
             # OpenBB (financial news / filings via the OpenBB Platform SDK)
             if self.config.sources.openbb and self.config.sources.openbb.enabled:
@@ -327,9 +356,14 @@ class HorizonOrchestrator:
                 tasks.append(self._fetch_with_progress("OpenBB", openbb_scraper, since))
 
             # OSS Insight trending repos
-            if self.config.sources.ossinsight and self.config.sources.ossinsight.enabled:
+            if (
+                self.config.sources.ossinsight
+                and self.config.sources.ossinsight.enabled
+            ):
                 oss_scraper = OSSInsightScraper(self.config.sources.ossinsight, client)
-                tasks.append(self._fetch_with_progress("OSS Insight", oss_scraper, since))
+                tasks.append(
+                    self._fetch_with_progress("OSS Insight", oss_scraper, since)
+                )
 
             # Fetch all concurrently
             results = await asyncio.gather(*tasks, return_exceptions=True)
@@ -344,7 +378,9 @@ class HorizonOrchestrator:
 
             return all_items
 
-    async def _fetch_with_progress(self, name: str, scraper, since: datetime) -> List[ContentItem]:
+    async def _fetch_with_progress(
+        self, name: str, scraper, since: datetime
+    ) -> List[ContentItem]:
         """Fetch from a scraper with progress indication.
 
         Args:
@@ -387,7 +423,9 @@ class HorizonOrchestrator:
             return meta["watchlist"]
         return item.author or "unknown"
 
-    def merge_cross_source_duplicates(self, items: List[ContentItem]) -> List[ContentItem]:
+    def merge_cross_source_duplicates(
+        self, items: List[ContentItem]
+    ) -> List[ContentItem]:
         """Merge items that point to the same URL from different sources.
 
         This is a stable stage helper for integrations such as MCP.
@@ -400,6 +438,7 @@ class HorizonOrchestrator:
         Returns:
             List[ContentItem]: Deduplicated items
         """
+
         def normalize_url(url: str) -> str:
             parsed = urlparse(str(url))
             # Strip www prefix, trailing slashes, and fragments
@@ -436,14 +475,20 @@ class HorizonOrchestrator:
                 # Append content (e.g., comments from another source)
                 if item is not primary and item.content:
                     if primary.content and item.content not in primary.content:
-                        primary.content = (primary.content or "") + f"\n\n--- From {item.source_type.value} ---\n" + item.content
+                        primary.content = (
+                            (primary.content or "")
+                            + f"\n\n--- From {item.source_type.value} ---\n"
+                            + item.content
+                        )
 
             primary.metadata["merged_sources"] = list(all_sources)
             merged.append(primary)
 
         return merged
 
-    async def merge_topic_duplicates(self, items: List[ContentItem]) -> List[ContentItem]:
+    async def merge_topic_duplicates(
+        self, items: List[ContentItem]
+    ) -> List[ContentItem]:
         """Merge items covering the same topic using AI semantic deduplication.
 
         This is a stable stage helper for integrations such as MCP.
@@ -466,7 +511,9 @@ class HorizonOrchestrator:
         for i, item in enumerate(items):
             tags = ", ".join(item.ai_tags) if item.ai_tags else "—"
             summary = item.ai_summary or "—"
-            lines.append(f"[{i}] {item.title}\n    Tags: {tags}\n    Summary: {summary}")
+            lines.append(
+                f"[{i}] {item.title}\n    Tags: {tags}\n    Summary: {summary}"
+            )
         items_text = "\n\n".join(lines)
 
         try:
@@ -477,12 +524,16 @@ class HorizonOrchestrator:
             )
             result = parse_json_response(response)
             if result is None:
-                self.console.print("[yellow]  dedup: could not parse AI response, skipping[/yellow]")
+                self.console.print(
+                    "[yellow]  dedup: could not parse AI response, skipping[/yellow]"
+                )
                 return items
 
             duplicate_groups = result.get("duplicates", [])
         except Exception as e:
-            self.console.print(f"[yellow]  dedup: AI call failed ({e}), skipping[/yellow]")
+            self.console.print(
+                f"[yellow]  dedup: AI call failed ({e}), skipping[/yellow]"
+            )
             return items
 
         if not duplicate_groups:
@@ -507,7 +558,9 @@ class HorizonOrchestrator:
                 if dup.content:
                     if not primary.content or dup.content not in primary.content:
                         label = dup.source_type.value
-                        primary.content = (primary.content or "") + f"\n\n--- From {label} ---\n{dup.content}"
+                        primary.content = (
+                            primary.content or ""
+                        ) + f"\n\n--- From {label} ---\n{dup.content}"
                 self.console.print(
                     f"   [dim]dedup: keep [{primary_idx}] {primary.title}[/dim]\n"
                     f"   [dim]       drop [{dup_idx}] {dup.title}[/dim]"
@@ -560,10 +613,39 @@ class HorizonOrchestrator:
                 )
 
         selected: List[tuple[ContentItem, str]] = []
+        selected_ids: set[str] = set()
         group_counts: Dict[str, int] = defaultdict(int)
         default_group = filtering.default_group
 
+        # First pass: reserve one slot for each configured group when possible so
+        # every board has a chance to appear in the final digest.
+        for group_key, group in groups.items():
+            if max_items is not None and len(selected) >= max_items:
+                break
+            if group.limit <= 0:
+                continue
+
+            for item in sorted_items:
+                if item.id in selected_ids:
+                    continue
+
+                category = item.metadata.get("category")
+                item_group = (
+                    category_to_group.get(category, default_group)
+                    if isinstance(category, str)
+                    else default_group
+                )
+                if item_group != group_key:
+                    continue
+
+                selected.append((item, group_key))
+                selected_ids.add(item.id)
+                group_counts[group_key] += 1
+                break
+
         for item in sorted_items:
+            if item.id in selected_ids:
+                continue
             category = item.metadata.get("category")
             group_key = (
                 category_to_group.get(category, default_group)
@@ -580,14 +662,23 @@ class HorizonOrchestrator:
                 continue
 
             selected.append((item, group_key))
+            selected_ids.add(item.id)
             group_counts[group_key] += 1
 
-        if max_items is not None:
-            selected = selected[:max_items]
+            if max_items is not None and len(selected) >= max_items:
+                break
+
+        selected.sort(key=lambda pair: pair[0].ai_score or 0, reverse=True)
 
         final_counts: Dict[str, int] = defaultdict(int)
-        for _, group_key in selected:
+        for item, group_key in selected:
             final_counts[group_key] += 1
+            if group_key in groups:
+                group_name = groups[group_key].name or group_key
+            else:
+                group_name = default_group
+            item.metadata["category_group"] = group_key
+            item.metadata["category_group_name"] = group_name
 
         group_limits: Dict[str, Optional[int]] = {
             group_key: group.limit for group_key, group in groups.items()
@@ -639,9 +730,8 @@ class HorizonOrchestrator:
         from .models import SourceType
 
         twitter_items = [
-            item for item in items
-            if item.source_type == SourceType.TWITTER
-        ][:tw_cfg.max_tweets_to_expand]
+            item for item in items if item.source_type == SourceType.TWITTER
+        ][: tw_cfg.max_tweets_to_expand]
 
         if not twitter_items:
             return
@@ -737,4 +827,6 @@ class HorizonOrchestrator:
 
         summarizer = DailySummarizer()
 
-        return await summarizer.generate_summary(items, date, total_fetched, language=language)
+        return await summarizer.generate_summary(
+            items, date, total_fetched, language=language
+        )

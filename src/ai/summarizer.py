@@ -60,12 +60,64 @@ LABELS = {
     },
 }
 
+GROUP_LABELS = {
+    "macro": {"en": "Macro Policy", "zh": "宏观政策"},
+    "macro-policy": {"en": "Macro Policy", "zh": "宏观政策"},
+    "china_policy": {"en": "China Policy", "zh": "中国产业政策"},
+    "china-policy": {"en": "China Policy", "zh": "中国产业政策"},
+    "geo": {"en": "Geopolitics", "zh": "地缘政治"},
+    "geopolitics": {"en": "Geopolitics", "zh": "地缘政治"},
+    "us_equities": {"en": "US Equities", "zh": "美股"},
+    "us-equities": {"en": "US Equities", "zh": "美股"},
+    "china_assets": {"en": "China Assets", "zh": "中国资产"},
+    "a-share": {"en": "China Assets", "zh": "中国资产"},
+    "crypto": {"en": "Crypto / Web3", "zh": "加密/Web3"},
+    "crypto-web3": {"en": "Crypto / Web3", "zh": "加密/Web3"},
+    "ai": {"en": "AI", "zh": "AI"},
+    "tech": {"en": "Tech", "zh": "科技"},
+    "other": {"en": "Other", "zh": "其他"},
+}
+
 
 class DailySummarizer:
     """Generates daily Markdown summaries from pre-analyzed content items."""
 
     def __init__(self):
         pass
+
+    def get_group_label(self, item: ContentItem, language: str) -> str:
+        """Return a localized section label for one item when available."""
+        meta = item.metadata
+        raw = (
+            meta.get(f"category_group_name_{language}")
+            or meta.get("category_group_name")
+            or meta.get("category_group")
+            or meta.get("category")
+        )
+        if not raw:
+            return ""
+
+        key = str(raw).strip()
+        if not key:
+            return ""
+
+        normalized = key.lower().replace(" ", "_")
+        labels = GROUP_LABELS.get(normalized)
+        if labels:
+            return labels.get(language, labels["en"])
+        return key
+
+    def format_display_title(self, item: ContentItem, language: str) -> str:
+        """Return the item title prefixed with its section label when present."""
+        title = str(item.metadata.get(f"title_{language}") or item.title)
+        title = title.replace("[", "(").replace("]", ")")
+        if language == "zh":
+            title = _pangu(title)
+
+        group_label = self.get_group_label(item, language)
+        if group_label:
+            return f"[{group_label}] {title}"
+        return title
 
     async def generate_summary(
         self,
@@ -101,10 +153,7 @@ class DailySummarizer:
         # TOC
         toc_entries = []
         for i, item in enumerate(items):
-            _t = item.metadata.get(f"title_{language}") or item.title
-            t = str(_t).replace("[", "(").replace("]", ")")
-            if language == "zh":
-                t = _pangu(t)
+            t = self.format_display_title(item, language)
             score = item.ai_score or "?"
             toc_entries.append(f"{i + 1}. [{t}](#item-{i + 1}) \u2b50\ufe0f {score}/10")
         toc = "\n".join(toc_entries) + "\n\n---\n\n"
@@ -140,9 +189,7 @@ class DailySummarizer:
 
         entries = []
         for i, item in enumerate(items, start=1):
-            title = str(item.metadata.get(f"title_{language}") or item.title).replace("[", "(").replace("]", ")")
-            if language == "zh":
-                title = _pangu(title)
+            title = self.format_display_title(item, language)
             score = item.ai_score or "?"
             entries.append(f"{i}. [{title}]({item.url}) \u2b50\ufe0f {score}/10")
 
@@ -162,8 +209,7 @@ class DailySummarizer:
 
     def _format_item(self, item: ContentItem, labels: dict, language: str, index: int) -> str:
         """Format a single ContentItem into Markdown."""
-        _title = item.metadata.get(f"title_{language}") or item.title
-        title = str(_title).replace("[", "(").replace("]", ")")
+        title = self.format_display_title(item, language)
         url = str(item.url)
         score = item.ai_score or "?"
         meta = item.metadata
@@ -182,7 +228,6 @@ class DailySummarizer:
         )
 
         if language == "zh":
-            title = _pangu(title)
             summary = _pangu(summary)
             background = _pangu(background)
             discussion = _pangu(discussion)

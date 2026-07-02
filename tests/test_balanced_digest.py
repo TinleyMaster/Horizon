@@ -91,8 +91,34 @@ def test_max_items_applies_after_group_limits() -> None:
 
     result = make_orchestrator(filtering).apply_balanced_digest(items)
 
-    assert [item.id for item in result.items] == ["ai-top", "ai-second"]
-    assert result.group_counts == {"ai": 2}
+    assert [item.id for item in result.items] == ["ai-top", "finance"]
+    assert result.group_counts == {"ai": 1, "finance": 1}
+
+
+def test_balanced_digest_reserves_one_item_per_configured_group_when_possible() -> None:
+    filtering = FilteringConfig(
+        max_items=3,
+        category_groups={
+            "macro": CategoryGroupConfig(limit=2, categories=["macro-policy"]),
+            "ai": CategoryGroupConfig(limit=2, categories=["ai"]),
+            "crypto": CategoryGroupConfig(limit=2, categories=["crypto-web3"]),
+        },
+    )
+    items = [
+        make_item("macro-top", 9.5, "macro-policy"),
+        make_item("macro-second", 9.0, "macro-policy"),
+        make_item("ai-top", 8.8, "ai"),
+        make_item("crypto-top", 7.5, "crypto-web3"),
+    ]
+
+    result = make_orchestrator(filtering).apply_balanced_digest(items)
+
+    assert [item.id for item in result.items] == [
+        "macro-top",
+        "ai-top",
+        "crypto-top",
+    ]
+    assert result.group_counts == {"macro": 1, "ai": 1, "crypto": 1}
 
 
 def test_max_items_works_without_category_groups() -> None:

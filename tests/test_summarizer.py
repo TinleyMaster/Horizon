@@ -105,6 +105,36 @@ def test_generate_webhook_item_uses_localized_discussion_label():
     assert "[社区讨论](https://www.reddit.com/r/python/comments/abc123/test/)" in result
 
 
+def test_generate_webhook_overview_prefixes_group_label_when_available():
+    summarizer = DailySummarizer()
+    item = _make_item(1)
+    item.metadata["category_group_name"] = "宏观政策"
+
+    result = summarizer.generate_webhook_overview(
+        [item],
+        date="2026-04-25",
+        total_fetched=10,
+        language="zh",
+    )
+
+    assert "1. [[宏观政策] Important Item 1](https://example.com/items/1)" in result
+
+
+def test_generate_webhook_item_prefixes_group_label_in_title():
+    summarizer = DailySummarizer()
+    item = _make_item(1)
+    item.metadata["category_group_name"] = "宏观政策"
+
+    result = summarizer.generate_webhook_item(
+        item,
+        language="zh",
+        index=1,
+        total=1,
+    )
+
+    assert "## [[宏观政策] Important Item 1](https://example.com/items/1)" in result
+
+
 def test_generate_summary_zh_uses_localized_selection_header_and_numeric_date():
     summarizer = DailySummarizer()
     item = _make_item(1)

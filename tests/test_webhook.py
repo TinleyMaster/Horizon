@@ -993,6 +993,7 @@ class TestSendDailySummary:
             _make_item(title="Item A"),
             _make_item(title="Item B", url="https://example.com/b"),
         ]
+        items[0].metadata["category_group_name"] = "宏观政策"
 
         messages = notifier.build_daily_summary_messages(
             summary="# Full summary",
@@ -1018,7 +1019,7 @@ class TestSendDailySummary:
         ]
         assert len(panels) == 2
         assert panels[0]["expanded"] is False
-        assert panels[0]["header"]["title"]["content"].startswith("1. Item A")
+        assert panels[0]["header"]["title"]["content"].startswith("1. [宏观政策] Item A")
         assert "Item 1/2" in panels[0]["elements"][0]["content"]
         assert panels[1]["header"]["title"]["content"].startswith("2. Item B")
         del os.environ[_TEST_URL_ENV]

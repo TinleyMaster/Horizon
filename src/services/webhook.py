@@ -387,7 +387,7 @@ class WebhookNotifier:
         elements: list[dict[str, Any]] = [_markdown(overview)]
 
         for item_index, item in enumerate(important_items, start=1):
-            title = str(item.metadata.get(f"title_{lang}") or item.title)
+            title = summarizer.format_display_title(item, lang)
             score = item.ai_score or "?"
             panel_title = f"{item_index}. {title} ⭐️ {score}/10"
             item_content = summarizer.generate_webhook_item(
@@ -506,7 +506,7 @@ class WebhookNotifier:
                 "summary": overview,
             }
             for item_index, item in enumerate(important_items, start=1):
-                title = str(item.metadata.get(f"title_{lang}") or item.title)
+                title = summarizer.format_display_title(item, lang)
                 item_summary = summarizer.generate_webhook_item(
                     item,
                     language=lang,
