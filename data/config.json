@@ -173,6 +173,18 @@
         "category": "crypto-web3"
       },
       {
+        "name": "Cointelegraph",
+        "url": "https://cointelegraph.com/rss",
+        "enabled": true,
+        "category": "crypto-web3"
+      },
+      {
+        "name": "Decrypt",
+        "url": "https://decrypt.co/feed",
+        "enabled": true,
+        "category": "crypto-web3"
+      },
+      {
         "name": "Hugging Face Blog",
         "url": "https://huggingface.co/blog/feed.xml",
         "enabled": true,
@@ -193,6 +205,12 @@
       {
         "name": "Ars Technica",
         "url": "https://feeds.arstechnica.com/arstechnica/index",
+        "enabled": true,
+        "category": "tech"
+      },
+      {
+        "name": "MIT Technology Review AI",
+        "url": "https://www.technologyreview.com/topic/artificial-intelligence/feed/",
         "enabled": true,
         "category": "tech"
       }
@@ -365,69 +383,69 @@
     }
   },
   "filtering": {
-    "ai_score_threshold": 6.6,
+    "ai_score_threshold": 5.8,
     "time_window_hours": 24,
-    "max_items": 30,
+    "max_items": 18,
     "category_groups": {
       "macro": {
         "name": "Macro Policy",
-        "limit": 6,
+        "limit": 3,
         "categories": [
           "macro-policy"
         ]
       },
       "china_policy": {
         "name": "China Policy",
-        "limit": 5,
+        "limit": 3,
         "categories": [
           "china-policy"
         ]
       },
       "geo": {
         "name": "Geopolitics",
-        "limit": 5,
+        "limit": 3,
         "categories": [
           "geopolitics"
         ]
       },
       "us_equities": {
         "name": "US Equities",
-        "limit": 4,
+        "limit": 2,
         "categories": [
           "us-equities"
         ]
       },
       "china_assets": {
         "name": "China Assets",
-        "limit": 3,
+        "limit": 2,
         "categories": [
           "a-share"
         ]
       },
       "crypto": {
         "name": "Crypto",
-        "limit": 4,
+        "limit": 2,
         "categories": [
           "crypto-web3"
         ]
       },
       "ai": {
         "name": "AI",
-        "limit": 4,
+        "limit": 2,
         "categories": [
           "ai"
         ]
       },
       "tech": {
         "name": "Tech",
-        "limit": 3,
+        "limit": 2,
         "categories": [
           "tech"
         ]
       }
     },
     "default_group": "other",
-    "default_group_limit": 3
+    "default_group_limit": 2
   },
   "webhook": {
     "enabled": true,
