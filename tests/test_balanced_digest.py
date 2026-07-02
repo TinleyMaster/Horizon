@@ -121,6 +121,36 @@ def test_balanced_digest_reserves_one_item_per_configured_group_when_possible() 
     assert result.group_counts == {"macro": 1, "ai": 1, "crypto": 1}
 
 
+def test_investor_category_override_prefers_finance_keywords_over_source_category() -> None:
+    orchestrator = make_orchestrator(FilteringConfig())
+    item = make_item("tradeweb", 8.0, "crypto-web3")
+    item.title = "Tradeweb executes first U.S. Treasury transaction on Canton Network"
+    item.author = "CoinDesk"
+
+    orchestrator._apply_investor_category_overrides([item])
+
+    assert item.metadata["category"] == "finance"
+    assert item.metadata["category_inferred_from"] == "keyword"
+
+
+def test_investor_category_override_maps_geopolitics_sources() -> None:
+    orchestrator = make_orchestrator(FilteringConfig())
+    item = ContentItem(
+        id="twitter:tweet:1",
+        source_type=SourceType.TWITTER,
+        title="@sentdefender: Update on regional military tensions",
+        url="https://example.com/geo",
+        author="sentdefender",
+        published_at=datetime.now(timezone.utc),
+        metadata={},
+    )
+
+    orchestrator._apply_investor_category_overrides([item])
+
+    assert item.metadata["category"] == "geopolitics"
+    assert item.metadata["category_inferred_from"] == "source_map"
+
+
 def test_max_items_works_without_category_groups() -> None:
     filtering = FilteringConfig(max_items=1)
     items = [make_item("lower", 7.0, None), make_item("higher", 9.0, None)]

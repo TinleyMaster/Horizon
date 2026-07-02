@@ -71,6 +71,7 @@ GROUP_LABELS = {
     "us-equities": {"en": "US Equities", "zh": "美股"},
     "china_assets": {"en": "China Assets", "zh": "中国资产"},
     "a-share": {"en": "China Assets", "zh": "中国资产"},
+    "finance": {"en": "Finance", "zh": "金融"},
     "crypto": {"en": "Crypto / Web3", "zh": "加密/Web3"},
     "crypto-web3": {"en": "Crypto / Web3", "zh": "加密/Web3"},
     "ai": {"en": "AI", "zh": "AI"},

@@ -5,6 +5,7 @@ import json
 from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
+import re
 from typing import List, Dict, Optional
 from urllib.parse import urlparse
 import httpx
@@ -28,6 +29,109 @@ from .ai.analyzer import ContentAnalyzer
 from .ai.summarizer import DailySummarizer
 from .ai.enricher import ContentEnricher
 from .ai.tokens import get_usage_snapshot
+
+TWITTER_CATEGORY_MAP = {
+    "kobeissiletter": "finance",
+    "lynaldencontact": "finance",
+    "thestalwart": "finance",
+    "financialjuice": "finance",
+    "sentdefender": "geopolitics",
+    "osinttechnical": "geopolitics",
+    "karpathy": "ai",
+    "swyx": "ai",
+    "vitalikbuterin": "crypto-web3",
+    "tokenterminal": "crypto-web3",
+}
+
+REDDIT_CATEGORY_MAP = {
+    "investing": "finance",
+    "securityanalysis": "finance",
+    "stocks": "finance",
+    "economics": "finance",
+    "geopolitics": "geopolitics",
+    "machinelearning": "ai",
+    "localllama": "ai",
+    "cryptocurrency": "crypto-web3",
+    "bitcoin": "crypto-web3",
+    "ethereum": "crypto-web3",
+    "defi": "crypto-web3",
+}
+
+GITHUB_CATEGORY_MAP = {
+    "huggingface/transformers": "ai",
+    "ollama/ollama": "ai",
+    "ethereum/go-ethereum": "crypto-web3",
+    "solana-labs/solana": "crypto-web3",
+}
+
+FINANCE_KEYWORDS = (
+    "fomc",
+    "fed ",
+    "federal reserve",
+    "treasury",
+    "treasuries",
+    "yield",
+    "bond",
+    "bonds",
+    "etf",
+    "etfs",
+    "cpi",
+    "pce",
+    "payroll",
+    "nonfarm",
+    "inflation",
+    "interest rate",
+    "rate cut",
+    "rate hike",
+    "liquidity",
+    "bank",
+    "banking",
+    "credit spread",
+    "equity",
+    "equities",
+    "stock",
+    "stocks",
+    "options",
+    "futures",
+    "earnings",
+    "ipo",
+    "cboe",
+    "nasdaq",
+    "nyse",
+    "tradeweb",
+    "fixed income",
+    "fx market",
+    "dollar index",
+    "s&p 500",
+)
+
+GEOPOLITICS_KEYWORDS = (
+    "war",
+    "ceasefire",
+    "missile",
+    "drone strike",
+    "airstrike",
+    "conflict",
+    "military",
+    "defense",
+    "sanction",
+    "tariff",
+    "export control",
+    "border",
+    "red sea",
+    "south china sea",
+    "middle east",
+    "shipping lane",
+    "iran",
+    "israel",
+    "gaza",
+    "ukraine",
+    "russia",
+    "taiwan",
+    "nato",
+    "navy",
+    "troop",
+)
 
 
 @dataclass
@@ -116,6 +220,7 @@ class HorizonOrchestrator:
 
             # 4. Analyze with AI
             analyzed_items = await self._analyze_content(merged_items)
+            self._apply_investor_category_overrides(analyzed_items)
             self.console.print(f"🤖 Analyzed {len(analyzed_items)} items with AI\n")
 
             # 5. Filter by score threshold
@@ -276,8 +381,10 @@ class HorizonOrchestrator:
 
     def _load_prefilter_keywords(self) -> list:
         try:
-            raw = json.loads(open(str(self.storage.config_path), encoding='utf-8').read())
-            return raw.get('filtering', {}).get('pre_filter_keywords', [])
+            raw = json.loads(
+                open(str(self.storage.config_path), encoding="utf-8").read()
+            )
+            return raw.get("filtering", {}).get("pre_filter_keywords", [])
         except Exception:
             return []
 
@@ -295,6 +402,66 @@ class HorizonOrchestrator:
             else:
                 skipped += 1
         return matched, skipped
+
+    def _apply_investor_category_overrides(self, items: List[ContentItem]) -> None:
+        """Reclassify items for investor-facing boards using source and content hints."""
+        for item in items:
+            category, reason = self._infer_investor_category(item)
+            if not category:
+                continue
+            item.metadata["category"] = category
+            item.metadata["category_inferred_from"] = reason
+
+    def _infer_investor_category(
+        self, item: ContentItem
+    ) -> tuple[Optional[str], Optional[str]]:
+        meta = item.metadata
+        existing = meta.get("category")
+        text = self._build_classification_text(item)
+
+        if self._contains_any_keyword(text, GEOPOLITICS_KEYWORDS):
+            return "geopolitics", "keyword"
+        if self._contains_any_keyword(text, FINANCE_KEYWORDS):
+            return "finance", "keyword"
+
+        source_category = self._infer_source_category(item)
+        if source_category:
+            return source_category, "source_map"
+
+        if isinstance(existing, str) and existing.strip():
+            return existing, "config"
+        return None, None
+
+    def _infer_source_category(self, item: ContentItem) -> Optional[str]:
+        meta = item.metadata
+        if item.source_type.value == "twitter":
+            handle = re.sub(r"^@", "", str(item.author or "")).strip().lower()
+            return TWITTER_CATEGORY_MAP.get(handle)
+        if item.source_type.value == "reddit":
+            subreddit = str(meta.get("subreddit") or "").strip().lower()
+            return REDDIT_CATEGORY_MAP.get(subreddit)
+        if item.source_type.value == "github":
+            repo = str(meta.get("repo") or "").strip().lower()
+            return GITHUB_CATEGORY_MAP.get(repo)
+        return None
+
+    def _build_classification_text(self, item: ContentItem) -> str:
+        meta = item.metadata
+        parts = [
+            item.title or "",
+            item.content or "",
+            item.ai_summary or "",
+            item.ai_reason or "",
+            " ".join(item.ai_tags or []),
+            str(meta.get("feed_name") or ""),
+            str(meta.get("subreddit") or ""),
+            str(meta.get("repo") or ""),
+            str(meta.get("watchlist") or ""),
+        ]
+        return " ".join(parts).lower()
+
+    def _contains_any_keyword(self, text: str, keywords: tuple[str, ...]) -> bool:
+        return any(keyword in text for keyword in keywords)
 
     async def fetch_all_sources(self, since: datetime) -> List[ContentItem]:
         """Fetch content from all configured sources.

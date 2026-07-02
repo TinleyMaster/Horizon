@@ -93,13 +93,13 @@
         "name": "Yicai Finance",
         "url": "https://rsshub.app/yicai/news/jinrong",
         "enabled": true,
-        "category": "macro-policy"
+        "category": "finance"
       },
       {
         "name": "Yicai Global Markets",
         "url": "https://rsshub.app/yicai/news/quanqiushichang",
         "enabled": true,
-        "category": "macro-policy"
+        "category": "finance"
       },
       {
         "name": "Yicai Tech",
@@ -123,7 +123,7 @@
         "name": "Xinhua Business",
         "url": "http://www.xinhuanet.com/english/rss/businessrss.xml",
         "enabled": true,
-        "category": "macro-policy"
+        "category": "finance"
       },
       {
         "name": "Xinhua World",
@@ -141,7 +141,7 @@
         "name": "BBC Business",
         "url": "http://feeds.bbci.co.uk/news/business/rss.xml",
         "enabled": true,
-        "category": "macro-policy"
+        "category": "finance"
       },
       {
         "name": "Al Jazeera",
@@ -159,7 +159,7 @@
         "name": "CNBC Business",
         "url": "https://www.cnbc.com/id/10001147/device/rss/rss.html",
         "enabled": true,
-        "category": "macro-policy"
+        "category": "finance"
       },
       {
         "name": "CoinDesk",
@@ -314,7 +314,7 @@
           "enabled": true,
           "provider": "yfinance",
           "fetch_limit": 15,
-          "category": "macro-policy",
+          "category": "finance",
           "symbols": [
             "TLT",
             "IEF",
@@ -401,6 +401,13 @@
         "limit": 3,
         "categories": [
           "geopolitics"
+        ]
+      },
+      "finance": {
+        "name": "Finance",
+        "limit": 3,
+        "categories": [
+          "finance"
         ]
       },
       "us_equities": {
