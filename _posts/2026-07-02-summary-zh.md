@@ -5,99 +5,153 @@ date: 2026-07-02
 lang: zh
 ---
 
-> 从 174 条内容中筛选出 6 条重要资讯。
+> 从 189 条内容中筛选出 10 条重要资讯。
 
 ---
 
-1. [首个能生长分裂的合成细胞诞生](#item-1) ⭐️ 10.0/10
-2. [Cloudflare 推出基于 x402 协议的变现网关](#item-2) ⭐️ 8.0/10
-3. [索尼将于 2028 年 1 月停止生产新 PlayStation 游戏光盘](#item-3) ⭐️ 8.0/10
-4. [Cloudflare 强制 AI 公司区分搜索与训练爬虫](#item-4) ⭐️ 8.0/10
+1. [首个能生长分裂的合成细胞诞生](#item-1) ⭐️ 9.0/10
+2. [Cloudflare 通过 x402 协议为资源收费](#item-2) ⭐️ 8.0/10
+3. [美团 LongCat-2.0 悄然登顶 OpenRouter](#item-3) ⭐️ 8.0/10
+4. [Cloudflare 要求 AI 公司区分搜索与训练爬虫](#item-4) ⭐️ 8.0/10
 5. [美国解除对 Anthropic 的 Fable 和 Mythos AI 模型的限制](#item-5) ⭐️ 8.0/10
-6. [Cboe 寻求批准上市盈利预测期权](#item-6) ⭐️ 7.0/10
+6. [Tradeweb 在 Canton Network 上完成首笔实时代币化美国国债交易](#item-6) ⭐️ 7.0/10
+7. [初创公司试图治愈 LLM 群体思维](#item-7) ⭐️ 7.0/10
+8. [谷歌智能助手 Gemini Spark 现已登陆 Mac](#item-8) ⭐️ 6.0/10
+9. [AMD 发布 Versal Premium Gen 2，面向 AI 与航空航天](#item-9) ⭐️ 6.0/10
+10. [Cboe 提议推出基于盈利指标的期权作为预测市场](#item-10) ⭐️ 6.0/10
 
 ---
 
 <a id="item-1"></a>
-## [首个能生长分裂的合成细胞诞生](https://www.quantamagazine.org/for-the-first-time-a-cell-built-from-scratch-grows-and-divides-20260701/) ⭐️ 10.0/10
+## [首个能生长分裂的合成细胞诞生](https://www.quantamagazine.org/for-the-first-time-a-cell-built-from-scratch-grows-and-divides-20260701/) ⭐️ 9.0/10
 
-由 Kate Adamala 博士领导的研究人员创造了 SpudCell，这是首个从零构建并能生长和分裂的合成细胞。这一突破克服了合成生物学中长期存在的细胞分裂难题。 这一成就标志着合成生物学的重要里程碑，使我们更接近创造完全自主的人工生命。它可能推动生物技术、医学和材料科学的新应用，并加深我们对生命基本原理的理解。 SpudCell 缺乏细胞骨架，而是采用不同的分裂机制，这是克服先前障碍的关键。该工作最初被《细胞》期刊拒绝，一位审稿人声称 SpudCells 不是真正的生物学。
+由 Kate Adamala 博士领导的研究团队创造了 SpudCell，这是首个从零构建并能生长和分裂的合成细胞。该成果于 2026 年 7 月发表，标志着合成生物学的一个重要里程碑。 这一成就克服了合成生物学中长期存在的障碍——在没有天然细胞骨架的情况下实现细胞分裂。它为设计用于医学、材料科学和生物技术等领域的定制细胞打开了大门。 SpudCell 通过使用简化的膜分裂机制实现分裂，而非天然细胞中基于细胞骨架的复杂过程。该工作最初被《细胞》期刊拒绝，一位审稿人认为 SpudCells 不是真正的生物学。
 
 hackernews · defrost · 7月1日 14:20 · [社区讨论](https://news.ycombinator.com/item?id=48747304)
 
-**背景**: 合成生物学旨在从零设计和构建生物系统。此前的研究已成功制造出能摄取营养和复制 DNA 的合成细胞，但细胞分裂——涉及细胞骨架重组的复杂过程——一直难以实现。Adamala 团队通过设计替代分裂途径，绕过了对细胞骨架的需求。
+**背景**: 合成生物学旨在从分子组件构建人工细胞，以理解生命的基本原理。此前的研究成功实现了合成细胞的喂养和 DNA 复制，但由于细胞骨架的复杂性，细胞分裂一直是一个重大挑战。Adamala 的团队通过设计一种无需细胞骨架即可分裂的细胞绕过了这一难题。
 
-**社区讨论**: 社区对这一突破表示兴奋，一些人指出这是该领域长期存在的瓶颈。但也有对发表过程和绕过细胞骨架的非传统方法的批评。一些评论者推测了未来的影响，包括一个名为 Biotic 的基于合成生物学的政治实体的崛起。
+**社区讨论**: 社区讨论褒贬不一：一些人称赞这一突破，而另一些人则批评其非传统的发表过程，并争论 SpudCells 是否算作“真正的生物学”。一条推测性评论想象了 SpudCell 背后的公司 Biotic 在未来成为主导政体的情景。
 
 **标签**: `#synthetic biology`, `#cell division`, `#biotechnology`, `#research breakthrough`
 
 ---
 
 <a id="item-2"></a>
-## [Cloudflare 推出基于 x402 协议的变现网关](https://blog.cloudflare.com/monetization-gateway/) ⭐️ 8.0/10
+## [Cloudflare 通过 x402 协议为资源收费](https://blog.cloudflare.com/monetization-gateway/) ⭐️ 8.0/10
 
-Cloudflare 宣布推出一个变现网关，利用 x402 协议对其网络后的任何资源进行收费，从而为 AI 代理和机器人流量实现微交易。 这可能改变网络变现方式，允许网站运营者对机器人和 AI 代理按请求收费，从而在抵消日益增长的自动化流量成本的同时，保留人类的免费访问。 x402 协议是 L402 协议的扩展，后者将 HTTP 402 Payment Required 与 Lightning Network 结合，实现即时微支付。Cloudflare 的实现直接集成到其边缘网络中，无需外部支付处理器即可轻松部署。
+Cloudflare 推出了一种货币化网关，利用 x402 协议对其网络后的任何资源进行收费，从而实现对内容和 API 访问的微交易。 这一发展可能从根本上改变网络内容和 API 的货币化方式，使微交易在大规模下变得可行，并可能减少对广告或订阅的依赖。 x402 协议基于闪电网络，支持即时、低成本的支付。Cloudflare 的实现直接集成到其边缘网络中，无需传统支付基础设施即可实现按使用付费的访问。
 
 hackernews · soheilpro · 7月1日 13:59 · [社区讨论](https://news.ycombinator.com/item?id=48746914)
 
-**背景**: HTTP 402 状态码最初为数字支付预留但从未被广泛采用。L402 协议通过将其与 Lightning Network（一种用于快速低成本交易的比特币二层解决方案）配对，重新激活了该状态码。Cloudflare 的 x402 在此基础上构建，提供了一种在边缘对网络资源收费的标准化方式。
+**背景**: x402 协议是 L402 协议的扩展，它将 HTTP 402 Payment Required 与闪电网络结合用于微支付。Cloudflare 的网关允许网站运营者为任何资源设定价格，用户通过闪电发票支付后才能访问。
 
-**社区讨论**: 评论者反应不一：一些人欢迎为 AI 代理实现微交易的愿景，而另一些人则质疑这是否解决了机器人流量问题，还是仅仅增加了复杂性。有几位评论者指出已有 L402 实现，并质疑 Cloudflare 为何要创建自己的版本。
+**社区讨论**: 社区评论反应不一：一些人对微交易和基于代理的支付潜力感到兴奋，而另一些人则担心机器人流量和垃圾信息。还有人惊讶于 Cloudflare 构建了自己的实现，而不是使用现有的 L402 解决方案。
 
-**标签**: `#Cloudflare`, `#web monetization`, `#x402`, `#AI agents`, `#microtransactions`
+**标签**: `#Cloudflare`, `#monetization`, `#x402`, `#microtransactions`, `#web`
 
 ---
 
 <a id="item-3"></a>
-## [索尼将于 2028 年 1 月停止生产新 PlayStation 游戏光盘](https://blog.playstation.com/2026/07/01/physical-disc-production-ending-in-january-2028-for-new-games-releasing-on-playstation-consoles/) ⭐️ 8.0/10
+## [美团 LongCat-2.0 悄然登顶 OpenRouter](https://decrypt.co/372579/longcat-2-0-meituan-ai-stealth-model-openrouter) ⭐️ 8.0/10
 
-索尼宣布，2028 年 1 月起将停止生产新 PlayStation 游戏的光盘，标志着该平台实体游戏媒体时代的终结。 这一转变加速了游戏行业全面数字化的进程，引发了关于数字所有权、DRM 和游戏保存的担忧，玩家将失去购买、出售或交易实体拷贝的能力。 该公告仅适用于新游戏发行；现有实体游戏仍可游玩。索尼的决定顺应了实体媒体销量下滑和数字采用率上升的大趋势。
+这一公告标志着 AI 模型格局的重大转变，一家中国科技巨头的模型以极低的成本超越西方领先模型，可能使高性能 AI 的获取更加民主化。 LongCat-2.0 在 OpenRouter 上以“Owl Alpha”身份伪装了两个月，之后美团才认领该模型，其价格远低于 GPT-5.5 和 Claude Sonnet 5。
 
-hackernews · Tiberium · 7月1日 12:13 · [社区讨论](https://news.ycombinator.com/item?id=48745456)
+rss · Decrypt · 7月1日 20:18
 
-**背景**: 实体游戏光盘几十年来一直是主机游戏的主流，允许玩家拥有、转售和离线游玩。索尼此举与其他发行商的类似步骤相呼应，预示着未来所有游戏发行都将数字化，引发了对长期访问和保存的质疑。
+**背景**: 混合专家模型使用多个专门的子模型（专家）处理不同输入，从而在不成比例增加计算成本的情况下实现大参数量。OpenRouter 是一个聚合多种 AI 模型的平台，允许用户比较性能和定价。美团是中国主要的电子商务和科技公司。
 
-**社区讨论**: 社区评论表达了强烈反对，引用索尼最近未经退款就删除已购买数字电影的行为，证明数字内容只是租用而非拥有。用户还指出价格差异，实体拷贝通常比数字版更便宜，并担心蓝光和游戏保存的未来。
-
-**标签**: `#gaming`, `#digital rights`, `#PlayStation`, `#physical media`, `#industry news`
+**标签**: `#AI`, `#Large Language Model`, `#Mixture-of-Experts`, `#OpenRouter`, `#Meituan`
 
 ---
 
 <a id="item-4"></a>
-## [Cloudflare 强制 AI 公司区分搜索与训练爬虫](https://techcrunch.com/2026/07/01/cloudflares-new-policy-pushes-ai-companies-to-pay-for-publishers-content/) ⭐️ 8.0/10
+## [Cloudflare 要求 AI 公司区分搜索与训练爬虫](https://techcrunch.com/2026/07/01/cloudflares-new-policy-pushes-ai-companies-to-pay-for-publishers-content/) ⭐️ 8.0/10
 
-Cloudflare 宣布一项新政策，要求 AI 公司在 9 月 15 日前将用于搜索索引的网络爬虫与用于 AI 训练和代理的爬虫分开，否则可能在许多出版商网站上被默认屏蔽。 该政策解决了 AI 公司为训练而抓取出版商内容与出版商寻求补偿之间日益紧张的关系，可能为网络爬虫的监管和变现开创先例。 截止日期为 9 月 15 日，之后 Cloudflare 将屏蔽不合规的 AI 爬虫，影响使用 Cloudflare 服务的众多出版商网站的访问。
+Cloudflare 宣布一项新政策，要求 AI 公司在 9 月 15 日前将用于搜索索引的网络爬虫与用于 AI 训练和代理的爬虫分开，否则可能在许多发布商网站上被默认屏蔽。 这一由主要互联网基础设施提供商推动的政策转变可能从根本上改变 AI 公司访问网络内容的方式，可能迫使它们与发布商谈判许可协议，并重塑用于 AI 训练的网络爬虫的经济模式。 截止日期为 9 月 15 日，之后 Cloudflare 将在使用其服务的发布商网站上屏蔽不合规的 AI 爬虫。该政策适用于所有 AI 公司，包括那些将爬虫用于模型训练、推理或代理任务的公司。
 
 rss · TechCrunch AI · 7月1日 17:48
 
-**背景**: AI 公司常使用网络爬虫从网站收集数据以训练大型语言模型。出版商对未经授权使用其内容表示担忧，引发了关于公平补偿和数据权利的辩论。作为主要的内容分发网络，Cloudflare 可以代表其出版商客户执行此类政策。
+**背景**: 网络爬虫是自动程序，用于为搜索引擎索引网页内容或为 AI 训练收集数据。最近，许多发布商抱怨 AI 公司未经许可或补偿使用其内容，引发了关于合理使用和内容许可的争论。Cloudflare 作为主要的内容分发网络，可以在网络层面强制执行此类政策。
 
-**标签**: `#AI`, `#web crawling`, `#publisher rights`, `#Cloudflare`, `#policy`
+**标签**: `#AI`, `#web crawling`, `#content licensing`, `#Cloudflare`, `#policy`
 
 ---
 
 <a id="item-5"></a>
 ## [美国解除对 Anthropic 的 Fable 和 Mythos AI 模型的限制](https://arstechnica.com/tech-policy/2026/07/after-spooking-trump-into-safety-testing-anthropic-ai-models-get-global-release/) ⭐️ 8.0/10
 
-美国政府解除了对 Anthropic 先进 AI 模型 Fable 和 Mythos 的限制，允许其在全球发布，此前特朗普政府要求进行安全测试。 这一政策转变标志着 AI 出口管制可能放松，可能加速前沿 AI 模型的全球部署，影响国际 AI 监管和竞争格局。 Fable 和 Mythos 是 Anthropic 最先进的模型之一，此次发布是在美国当局监督的安全评估之后进行的。安全测试的具体内容以及对模型所做的修改尚未披露。
+美国政府解除了对 Anthropic 先进 AI 模型 Fable 和 Mythos 的限制，允许其在全球发布，此前特朗普政府推动了安全测试。 这一政策转变可能意味着 AI 出口管制的放松，并可能加速尖端 AI 的全球部署，影响全球竞争和监管。 Fable 和 Mythos 模型是 Anthropic 最先进的模型之一，此次发布是在特朗普政府强制要求的安全测试之后进行的。
 
 rss · Ars Technica · 7月1日 16:44
 
-**背景**: Anthropic 是一家领先的 AI 安全公司，以开发注重对齐和负责任部署的大型语言模型而闻名。特朗普政府此前出于国家安全考虑，对先进 AI 模型的出口施加了限制，但近期的安全测试似乎已让监管机构满意。
+**背景**: Anthropic 是一家以开发对齐性大型语言模型而闻名的 AI 安全公司。特朗普政府此前出于国家安全考虑，对先进 AI 模型的出口实施了限制。
 
-**标签**: `#AI regulation`, `#Anthropic`, `#AI safety`, `#government policy`, `#model release`
+**标签**: `#AI`, `#regulation`, `#Anthropic`, `#safety`, `#policy`
 
 ---
 
 <a id="item-6"></a>
-## [Cboe 寻求批准上市盈利预测期权](https://finance.yahoo.com/markets/options/articles/cboe-seeks-list-prediction-market-215303858.html) ⭐️ 7.0/10
+## [Tradeweb 在 Canton Network 上完成首笔实时代币化美国国债交易](https://cointelegraph.com/news/tradeweb-executes-real-time-tokenized-us-treasury-transaction-on-canton-network?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound) ⭐️ 7.0/10
 
-芝加哥期权交易所全球市场已向监管机构提交申请，拟上市基于公司盈利指标的期权合约，这实际上为盈利结果创建了预测市场工具。 此举可能连接传统金融与预测市场，为盈利事件提供新的对冲和投机工具，并可能提高市场效率。 拟议的期权将根据公司报告的盈利是否达到、超过或未达到特定目标进行结算，类似于二元期权，但结构为标准期权。
+Tradeweb 在 Canton Network 上执行了首笔实时代币化美国国债交易，Franklin Templeton 将代币化美国国债转移给 Virtu Financial，并以 USDCx 结算。 这一里程碑证明了在公共许可区块链上对代币化现实世界资产进行实时结算的可行性，可能通过缩短结算时间和提高效率来改变机构金融。 该交易使用了 Canton Network 上的 USDCx（USDC 的代币化版本）进行结算。Canton Network 是一个为机构使用设计的隐私保护区块链，连接多个金融应用。
+
+rss · Cointelegraph · 7月1日 20:38
+
+**背景**: 代币化是指在区块链上创建现实世界资产的数字表示，从而实现更快、更透明的交易。美国国债因其流动性和稳定性而成为代币化的热门资产类别。Canton Network 是由 Digital Asset 开发的区块链平台，专注于为金融机构提供隐私和互操作性。
+
+**标签**: `#tokenization`, `#blockchain`, `#DeFi`, `#US Treasury`, `#institutional finance`
+
+---
+
+<a id="item-7"></a>
+## [初创公司试图治愈 LLM 群体思维](https://www.technologyreview.com/2026/07/01/1140003/llms-are-stuck-in-a-groupthink-rut-this-startup-is-trying-to-get-them-out/) ⭐️ 7.0/10
+
+一家初创公司正在开发方法，通过向大型语言模型（LLM）的输出中引入更多多样性，来减少其刻板反应，例如总是选择 7 作为随机数。 这很重要，因为 LLM 输出缺乏多样性限制了它们在创造性任务中的实用性，并可能强化偏见，影响内容生成、教育和决策等行业。 该初创公司的方法可能涉及温度缩放、top-k 采样或新颖的训练方法等技术来鼓励多样化响应，但文章未披露具体细节。
+
+rss · MIT Technology Review AI · 7月1日 14:35
+
+**背景**: 像 GPT-4 和 Claude 这样的大型语言模型（LLM）在大量文本语料库上训练，这常常导致它们产生常见或“安全”的答案，例如选择 7 作为随机数。这种现象有时被称为“模式崩溃”或“缺乏多样性”，源于模型对似然性的优化，这倾向于频繁出现的模式。解决这个问题可以使 LLM 更具创造性且更不可预测。
+
+**标签**: `#LLMs`, `#AI diversity`, `#startup`, `#machine learning`, `#bias`
+
+---
+
+<a id="item-8"></a>
+## [谷歌智能助手 Gemini Spark 现已登陆 Mac](https://techcrunch.com/2026/07/01/gemini-spark-googles-agentic-assistant-is-now-available-on-mac/) ⭐️ 6.0/10
+
+谷歌将其全天候智能助手 Gemini Spark 发布到 macOS 平台，为 Mac 用户带来实时追踪和更广泛的应用支持。 此次扩展标志着谷歌推动其 AI 助手成为跨平台主力，直接与苹果生态系统及其他桌面助手竞争。 Gemini Spark 提供实时追踪功能，并在 Mac 上支持更多应用，但具体应用集成和性能细节尚未披露。
+
+rss · TechCrunch AI · 7月1日 14:20
+
+**背景**: Gemini Spark 是谷歌的智能 AI 助手，旨在持续运行，执行日程安排、提醒和信息检索等任务。此前它已在 Android 和网页端可用，Mac 版的发布将其覆盖范围扩展至桌面用户。
+
+**标签**: `#Google`, `#AI assistant`, `#Mac`, `#Gemini Spark`
+
+---
+
+<a id="item-9"></a>
+## [AMD 发布 Versal Premium Gen 2，面向 AI 与航空航天](https://finance.yahoo.com/technology/ai/articles/amd-amd-unveils-versal-premium-021232384.html) ⭐️ 6.0/10
+
+AMD 发布了 Versal Premium Gen 2，这是一款专为 AI 推理和航空航天应用设计的新型自适应计算加速平台（ACAP）。 该产品扩大了 AMD 在日益增长的 AI 硬件市场中的影响力，并满足了航空航天领域严苛的可靠性要求，可能对赛灵思（现属 AMD）和英特尔 FPGA 产品构成挑战。 Versal Premium Gen 2 集成了 AI 引擎、DSP 模块和高带宽内存，预计于 2024 年下半年提供样品。其目标应用包括雷达、电子战和卫星通信。
+
+openbb · MSFT · 7月2日 02:12
+
+**背景**: AMD 于 2022 年收购了赛灵思，获得了 FPGA 和自适应计算方面的专业知识。Versal 系列是 AMD 的旗舰 ACAP 产品线，结合了可编程逻辑与专用处理引擎。Gen 2 版本专注于提升 AI 推理性能以及在关键任务环境中的可靠性。
+
+**标签**: `#AMD`, `#AI hardware`, `#aerospace`, `#FPGA`
+
+---
+
+<a id="item-10"></a>
+## [Cboe 提议推出基于盈利指标的期权作为预测市场](https://finance.yahoo.com/markets/options/articles/cboe-seeks-list-prediction-market-215303858.html) ⭐️ 6.0/10
+
+芝加哥期权交易所全球市场已向 SEC 提交提案，拟上市基于盈利指标的期权，从而有效创建企业盈利预测市场。若获批，这些期权将允许交易者押注公司盈利是否达到、超过或未达到特定指标。 这一举措可能将传统金融衍生品与预测市场连接起来，为盈利事件提供新的对冲和投机工具。它还可能通过汇聚关于公司业绩的多元观点来提高市场效率。 拟议的期权将根据实际报告的盈利指标（如每股收益或营收）进行现金结算。它们与标准股票期权的不同之处在于关注特定的财务结果而非股价变动。
 
 openbb · MSFT · 7月1日 21:53
 
-**背景**: 预测市场允许对事件结果（如选举或经济数据）进行交易。Cboe 的提案将这一概念应用于投资者密切关注的盈利数据。此类产品模糊了证券与事件合约的界限，因此需要监管批准。
+**背景**: 预测市场允许参与者交易合约，其收益取决于未来事件（如选举或经济数据）的结果。期权是一种金融衍生品，赋予买方在预定价格买入或卖出资产的权利而非义务。Cboe 的提案通过创建与公司盈利指标挂钩的期权，将这两个概念结合起来。
 
-**标签**: `#prediction markets`, `#options`, `#finance`, `#regulation`, `#earnings`
+**标签**: `#prediction markets`, `#options`, `#finance`, `#earnings`
 
 ---
