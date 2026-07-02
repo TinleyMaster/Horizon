@@ -4,10 +4,11 @@
     "provider": "deepseek",
     "model": "deepseek-chat",
     "api_key_env": "DEEPSEEK_API_KEY",
-    "temperature": 0.3,
+    "temperature": 0.15,
     "max_tokens": 4096,
-    "analysis_concurrency": 5,
-    "enrichment_concurrency": 3,
+    "throttle_sec": 0,
+    "analysis_concurrency": 4,
+    "enrichment_concurrency": 2,
     "languages": [
       "zh"
     ]
@@ -23,56 +24,158 @@
     "github": [
       {
         "type": "repo_releases",
-        "owner": "vllm-project",
-        "repo": "vllm",
+        "owner": "huggingface",
+        "repo": "transformers",
         "enabled": true
       },
       {
         "type": "repo_releases",
-        "owner": "langchain-ai",
-        "repo": "langchain",
+        "owner": "ollama",
+        "repo": "ollama",
         "enabled": true
       },
       {
         "type": "repo_releases",
-        "owner": "anthropics",
-        "repo": "anthropic-cookbook",
+        "owner": "ethereum",
+        "repo": "go-ethereum",
         "enabled": true
       },
       {
         "type": "repo_releases",
-        "owner": "microsoft",
-        "repo": "autogen",
-        "enabled": true
-      },
-      {
-        "type": "repo_releases",
-        "owner": "openai",
-        "repo": "openai-python",
-        "enabled": true
-      },
-      {
-        "type": "repo_releases",
-        "owner": "ggml-org",
-        "repo": "llama.cpp",
+        "owner": "solana-labs",
+        "repo": "solana",
         "enabled": true
       }
     ],
     "hackernews": {
       "enabled": true,
-      "fetch_top_stories": 15,
-      "min_score": 50
+      "fetch_top_stories": 40,
+      "min_score": 120
     },
     "rss": [
       {
-        "name": "Simon Willison",
-        "url": "https://simonwillison.net/atom/everything/",
+        "name": "Fed Monetary Policy",
+        "url": "https://www.federalreserve.gov/feeds/press_monetary.xml",
         "enabled": true,
-        "category": "ai-tools"
+        "category": "macro-policy"
       },
       {
-        "name": "Hugging Face",
+        "name": "Fed Speeches",
+        "url": "https://www.federalreserve.gov/feeds/speeches.xml",
+        "enabled": true,
+        "category": "macro-policy"
+      },
+      {
+        "name": "Fed Policy Rates",
+        "url": "https://www.federalreserve.gov/feeds/prates.xml",
+        "enabled": true,
+        "category": "macro-policy"
+      },
+      {
+        "name": "Fed Balance Sheet",
+        "url": "https://www.federalreserve.gov/feeds/h41.xml",
+        "enabled": true,
+        "category": "macro-policy"
+      },
+      {
+        "name": "Yicai Headline",
+        "url": "https://rsshub.app/yicai/headline",
+        "enabled": true,
+        "category": "china-policy"
+      },
+      {
+        "name": "Yicai Macro Policy",
+        "url": "https://rsshub.app/yicai/news/hongguan",
+        "enabled": true,
+        "category": "china-policy"
+      },
+      {
+        "name": "Yicai Finance",
+        "url": "https://rsshub.app/yicai/news/jinrong",
+        "enabled": true,
+        "category": "macro-policy"
+      },
+      {
+        "name": "Yicai Global Markets",
+        "url": "https://rsshub.app/yicai/news/quanqiushichang",
+        "enabled": true,
+        "category": "macro-policy"
+      },
+      {
+        "name": "Yicai Tech",
+        "url": "https://rsshub.app/yicai/news/kechuang",
+        "enabled": true,
+        "category": "ai"
+      },
+      {
+        "name": "Yicai Morning Brief",
+        "url": "https://rsshub.app/yicai/feed/669",
+        "enabled": true,
+        "category": "china-policy"
+      },
+      {
+        "name": "Xinhua China",
+        "url": "http://www.xinhuanet.com/english/rss/chinarss.xml",
+        "enabled": true,
+        "category": "china-policy"
+      },
+      {
+        "name": "Xinhua Business",
+        "url": "http://www.xinhuanet.com/english/rss/businessrss.xml",
+        "enabled": true,
+        "category": "macro-policy"
+      },
+      {
+        "name": "Xinhua World",
+        "url": "http://www.xinhuanet.com/english/rss/worldrss.xml",
+        "enabled": true,
+        "category": "geopolitics"
+      },
+      {
+        "name": "BBC World",
+        "url": "http://feeds.bbci.co.uk/news/world/rss.xml",
+        "enabled": true,
+        "category": "geopolitics"
+      },
+      {
+        "name": "BBC Business",
+        "url": "http://feeds.bbci.co.uk/news/business/rss.xml",
+        "enabled": true,
+        "category": "macro-policy"
+      },
+      {
+        "name": "Al Jazeera",
+        "url": "https://www.aljazeera.com/xml/rss/all.xml",
+        "enabled": true,
+        "category": "geopolitics"
+      },
+      {
+        "name": "CNBC World",
+        "url": "https://www.cnbc.com/id/100727362/device/rss/rss.html",
+        "enabled": true,
+        "category": "geopolitics"
+      },
+      {
+        "name": "CNBC Business",
+        "url": "https://www.cnbc.com/id/10001147/device/rss/rss.html",
+        "enabled": true,
+        "category": "macro-policy"
+      },
+      {
+        "name": "CoinDesk",
+        "url": "https://www.coindesk.com/arc/outboundfeeds/rss/",
+        "enabled": true,
+        "category": "crypto-web3"
+      },
+      {
+        "name": "Hugging Face Blog",
         "url": "https://huggingface.co/blog/feed.xml",
+        "enabled": true,
+        "category": "ai"
+      },
+      {
+        "name": "Simon Willison",
+        "url": "https://simonwillison.net/atom/everything/",
         "enabled": true,
         "category": "ai"
       },
@@ -80,140 +183,159 @@
         "name": "TechCrunch AI",
         "url": "https://techcrunch.com/category/artificial-intelligence/feed/",
         "enabled": true,
-        "category": "ai-news"
+        "category": "ai"
       },
       {
-        "name": "MIT Tech Review AI",
-        "url": "https://www.technologyreview.com/topic/artificial-intelligence/feed/",
+        "name": "Ars Technica",
+        "url": "https://feeds.arstechnica.com/arstechnica/index",
         "enabled": true,
-        "category": "ai-analysis"
-      },
-      {
-        "name": "GitHub Trending",
-        "url": "https://mshibanami.github.io/GitHubTrendingRSS/daily/all.xml",
-        "enabled": true,
-        "category": "github-trending"
-      },
-      {
-        "name": "量子位",
-        "url": "https://wechat2rss.xlab.app/feed/7131b577c61365cb47e81000738c10d872685908.xml",
-        "enabled": true,
-        "category": "ai-news-zh"
-      },
-      {
-        "name": "新智元",
-        "url": "https://wechat2rss.xlab.app/feed/ede30346413ea70dbef5d485ea5cbb95cca446e7.xml",
-        "enabled": true,
-        "category": "ai-news-zh"
-      },
-      {
-        "name": "CoinDesk",
-        "url": "https://www.coindesk.com/arc/outboundfeeds/rss/",
-        "enabled": true,
-        "category": "crypto"
-      },
-      {
-        "name": "CoinTelegraph",
-        "url": "https://cointelegraph.com/rss",
-        "enabled": true,
-        "category": "crypto"
-      },
-      {
-        "name": "Decrypt",
-        "url": "https://decrypt.co/feed",
-        "enabled": true,
-        "category": "crypto"
-      },
-      {
-        "name": "The Block",
-        "url": "https://www.theblock.co/rss",
-        "enabled": true,
-        "category": "crypto"
-      },
-      {
-        "name": "CNBC Finance",
-        "url": "https://www.cnbc.com/id/100003114/device/rss/rss.html",
-        "enabled": true,
-        "category": "finance"
-      },
-      {
-        "name": "Reuters Business",
-        "url": "https://www.reutersagency.com/feed/?taxonomy=best-sectors&post_type=best&best-sector=business",
-        "enabled": true,
-        "category": "finance"
-      },
-      {
-        "name": "MarketWatch",
-        "url": "https://feeds.marketwatch.com/marketwatch/topstories",
-        "enabled": true,
-        "category": "finance"
-      },
-      {
-        "name": "Yahoo Finance",
-        "url": "https://finance.yahoo.com/news/rssindex",
-        "enabled": true,
-        "category": "finance"
-      },
-      {
-        "name": "WSJ Markets",
-        "url": "https://feeds.a.dj.com/rss/RSSMarketsMain.xml",
-        "enabled": true,
-        "category": "finance"
+        "category": "tech"
       }
     ],
     "reddit": {
       "enabled": true,
       "subreddits": [
         {
+          "subreddit": "investing",
+          "enabled": true,
+          "sort": "hot",
+          "time_filter": "day",
+          "fetch_limit": 12,
+          "min_score": 50
+        },
+        {
+          "subreddit": "SecurityAnalysis",
+          "enabled": true,
+          "sort": "hot",
+          "time_filter": "day",
+          "fetch_limit": 10,
+          "min_score": 25
+        },
+        {
+          "subreddit": "geopolitics",
+          "enabled": true,
+          "sort": "hot",
+          "time_filter": "day",
+          "fetch_limit": 10,
+          "min_score": 40
+        },
+        {
           "subreddit": "MachineLearning",
           "enabled": true,
           "sort": "hot",
           "time_filter": "day",
-          "fetch_limit": 10,
-          "min_score": 60
-        },
-        {
-          "subreddit": "LocalLLaMA",
-          "enabled": true,
-          "sort": "hot",
-          "time_filter": "day",
-          "fetch_limit": 10,
-          "min_score": 60
+          "fetch_limit": 12,
+          "min_score": 40
         },
         {
           "subreddit": "CryptoCurrency",
           "enabled": true,
           "sort": "hot",
           "time_filter": "day",
-          "fetch_limit": 10,
-          "min_score": 100
-        },
-        {
-          "subreddit": "ethereum",
-          "enabled": true,
-          "sort": "hot",
-          "time_filter": "day",
-          "fetch_limit": 10,
+          "fetch_limit": 12,
           "min_score": 50
-        },
-        {
-          "subreddit": "defi",
-          "enabled": true,
-          "sort": "hot",
-          "time_filter": "day",
-          "fetch_limit": 5,
-          "min_score": 30
         }
       ],
-      "fetch_comments": 3
+      "users": [],
+      "fetch_comments": 5
+    },
+    "telegram": {
+      "enabled": false,
+      "channels": []
     },
     "twitter": {
-      "enabled": false,
-      "users": [],
-      "fetch_limit": 10
+      "enabled": true,
+      "mode": "apify",
+      "users": [
+        "KobeissiLetter",
+        "LynAldenContact",
+        "TheStalwart",
+        "financialjuice",
+        "karpathy",
+        "swyx",
+        "VitalikButerin",
+        "tokenterminal",
+        "sentdefender",
+        "Osinttechnical"
+      ],
+      "fetch_limit": 10,
+      "fetch_reply_text": true,
+      "max_replies_per_tweet": 3,
+      "max_tweets_to_expand": 8,
+      "reply_min_likes": 10,
+      "apify_token_env": "APIFY_TOKEN",
+      "actor_id": "altimis~scweet",
+      "cookie_dir": "data",
+      "cookie_file_pattern": "x_cookies_*.json"
     },
     "openbb": {
-      "enabled": false
+      "enabled": true,
+      "fetch_filings": false,
+      "filings_provider": "sec",
+      "watchlists": [
+        {
+          "name": "us-megacaps-ai",
+          "enabled": true,
+          "provider": "yfinance",
+          "fetch_limit": 20,
+          "category": "us-equities",
+          "symbols": [
+            "MSFT",
+            "NVDA",
+            "AMD",
+            "AMZN",
+            "META",
+            "GOOGL",
+            "AAPL",
+            "TSM",
+            "ASML"
+          ]
+        },
+        {
+          "name": "macro-sensitive-finance",
+          "enabled": true,
+          "provider": "yfinance",
+          "fetch_limit": 15,
+          "category": "macro-policy",
+          "symbols": [
+            "TLT",
+            "IEF",
+            "DXY",
+            "GLD",
+            "XLF",
+            "KRE"
+          ]
+        },
+        {
+          "name": "crypto-proxies",
+          "enabled": true,
+          "provider": "yfinance",
+          "fetch_limit": 15,
+          "category": "crypto-web3",
+          "symbols": [
+            "COIN",
+            "MSTR",
+            "HOOD",
+            "MARA",
+            "RIOT"
+          ]
+        },
+        {
+          "name": "china-tech-proxy",
+          "enabled": true,
+          "provider": "yfinance",
+          "fetch_limit": 15,
+          "category": "a-share",
+          "symbols": [
+            "BABA",
+            "PDD",
+            "JD",
+            "BIDU",
+            "NTES",
+            "TCEHY"
+          ]
+        }
+      ]
     },
     "ossinsight": {
       "enabled": true,
@@ -225,80 +347,82 @@
         "Rust"
       ],
       "keywords": [
-        "ai",
-        "llm",
         "agent",
+        "llm",
         "rag",
-        "mcp"
+        "wallet",
+        "blockchain",
+        "solana",
+        "ethereum"
       ],
-      "min_stars": 50,
+      "min_stars": 20,
       "max_items": 20
     }
   },
   "filtering": {
-    "ai_score_threshold": 7.0,
+    "ai_score_threshold": 6.6,
     "time_window_hours": 24,
-    "max_items": 20,
+    "max_items": 30,
     "category_groups": {
-      "research": {
-        "name": "📄 论文与前沿研究",
-        "limit": 5,
+      "macro": {
+        "name": "宏观政策",
+        "limit": 6,
         "categories": [
-          "research"
+          "macro-policy"
         ]
       },
-      "ai-tools": {
-        "name": "🛠 工具与框架",
+      "china_policy": {
+        "name": "中国产业政策",
         "limit": 5,
         "categories": [
-          "ai-tools"
+          "china-policy"
         ]
       },
-      "ai-news": {
-        "name": "📰 行业动态",
+      "geo": {
+        "name": "地缘政治",
         "limit": 5,
         "categories": [
-          "ai-news"
+          "geopolitics"
         ]
       },
-      "ai-news-zh": {
-        "name": "🇨🇳 中文资讯",
-        "limit": 5,
+      "us_equities": {
+        "name": "美股",
+        "limit": 4,
         "categories": [
-          "ai-news-zh"
+          "us-equities"
         ]
       },
-      "ai-analysis": {
-        "name": "🔍 深度分析",
-        "limit": 5,
+      "china_assets": {
+        "name": "中国资产",
+        "limit": 3,
         "categories": [
-          "ai-analysis"
-        ]
-      },
-      "github-trending": {
-        "name": "⭐ GitHub 趋势",
-        "limit": 5,
-        "categories": [
-          "github-trending"
+          "a-share"
         ]
       },
       "crypto": {
-        "name": "₿ 加密与Web3",
-        "limit": 5,
+        "name": "加密/Web3",
+        "limit": 4,
         "categories": [
-          "crypto"
+          "crypto-web3"
         ]
       },
-      "finance": {
-        "name": "💰 财经与市场",
-        "limit": 5,
+      "ai": {
+        "name": "AI",
+        "limit": 4,
         "categories": [
-          "finance"
+          "ai"
+        ]
+      },
+      "tech": {
+        "name": "科技",
+        "limit": 3,
+        "categories": [
+          "tech"
         ]
       }
     },
     "default_group": "other",
-    "default_group_limit": 5,
+    "default_group_limit": 3,
     "pre_filter_keywords": [
       "LLM",
       "GPT",
@@ -370,7 +494,7 @@
     "delivery": "summary",
     "platform": "feishu",
     "overview_position": "first",
-    "layout": "markdown",
+    "layout": "collapsible",
     "fallback_layout": "markdown",
     "request_body": {
       "msg_type": "interactive",
@@ -382,7 +506,7 @@
         "header": {
           "title": {
             "tag": "plain_text",
-            "content": "☀️ Horizon AI 资讯日报"
+            "content": "☀️ Horizon 投资者资讯日报"
           },
           "template": "blue"
         },
