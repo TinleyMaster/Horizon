@@ -8,11 +8,61 @@ from tenacity import retry, stop_after_attempt, wait_exponential
 from rich.progress import Progress, SpinnerColumn, BarColumn, TextColumn, MofNCompleteColumn
 
 from .client import AIClient
-from .prompts import CONTENT_ANALYSIS_SYSTEM, CONTENT_ANALYSIS_USER
+from .prompts import CONTENT_ANALYSIS_USER, get_content_analysis_system
 from .utils import parse_json_response
 from ..models import ContentItem
 
 DEFAULT_THROTTLE_SEC = 0.0
+INVESTOR_LOW_SIGNAL_PATTERNS = (
+    "tutorial",
+    "deep dive",
+    "deep-dive",
+    "interactive explainer",
+    "explainer",
+    "guide",
+    "how it works",
+    "history of",
+    "primer",
+    "walkthrough",
+    "mechanical engineering",
+    "interactive article",
+    "解析",
+    "科普",
+    "原理",
+    "教程",
+    "入门",
+    "详解",
+)
+INVESTOR_HIGH_SIGNAL_PATTERNS = (
+    "earnings",
+    "guidance",
+    "revenue",
+    "forecast",
+    "fed",
+    "fomc",
+    "tariff",
+    "sanction",
+    "regulation",
+    "funding",
+    "raises",
+    "launches",
+    "approval",
+    "etf",
+    "acquisition",
+    "merger",
+    "policy",
+    "yield",
+    "treasury",
+    "export control",
+    "资本开支",
+    "财报",
+    "融资",
+    "政策",
+    "监管",
+    "关税",
+    "制裁",
+    "发布",
+)
 
 
 class ContentAnalyzer:
@@ -40,6 +90,11 @@ class ContentAnalyzer:
         config = getattr(self.client, "config", None)
         concurrency = getattr(config, "analysis_concurrency", 1)
         return max(concurrency, 1)
+
+    def _get_scoring_profile(self) -> str:
+        config = getattr(self.client, "config", None)
+        profile = getattr(config, "scoring_profile", "general")
+        return "investor" if profile == "investor" else "general"
 
     async def analyze_batch(self, items: List[ContentItem]) -> List[ContentItem]:
         throttle_sec = self._get_throttle_sec()
@@ -141,7 +196,7 @@ class ContentAnalyzer:
 
         # Get AI completion
         response = await self.client.complete(
-            system=CONTENT_ANALYSIS_SYSTEM,
+            system=get_content_analysis_system(self._get_scoring_profile()),
             user=user_prompt,
         )
 
@@ -160,3 +215,38 @@ class ContentAnalyzer:
         item.ai_reason = result.get("reason", "")
         item.ai_summary = result.get("summary", item.title)
         item.ai_tags = result.get("tags", [])
+        self._apply_post_analysis_adjustments(item)
+
+    def _apply_post_analysis_adjustments(self, item: ContentItem) -> None:
+        if self._get_scoring_profile() != "investor":
+            return
+        if item.ai_score is None:
+            return
+
+        text = " ".join(
+            [
+                item.title or "",
+                item.ai_summary or "",
+                item.ai_reason or "",
+                item.content or "",
+            ]
+        ).lower()
+
+        low_signal_hits = sum(1 for pattern in INVESTOR_LOW_SIGNAL_PATTERNS if pattern in text)
+        high_signal_hits = sum(1 for pattern in INVESTOR_HIGH_SIGNAL_PATTERNS if pattern in text)
+
+        if low_signal_hits == 0:
+            return
+
+        penalty = 0.0
+        if high_signal_hits == 0:
+            penalty = 1.5
+        elif high_signal_hits <= low_signal_hits:
+            penalty = 0.75
+
+        if penalty <= 0:
+            return
+
+        item.ai_score = max(0.0, round(item.ai_score - penalty, 2))
+        note = "Investor mode lowered the score because this reads more like background or tutorial content than a direct market catalyst."
+        item.ai_reason = f"{item.ai_reason} {note}".strip()

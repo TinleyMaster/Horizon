@@ -2,6 +2,7 @@
   "version": "1.0",
   "ai": {
     "provider": "deepseek",
+    "scoring_profile": "investor",
     "model": "deepseek-chat",
     "api_key_env": "DEEPSEEK_API_KEY",
     "temperature": 0.15,

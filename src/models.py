@@ -2,7 +2,7 @@
 
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Optional, List, Dict, Any, Union
+from typing import Optional, List, Dict, Any, Union, Literal
 from pydantic import BaseModel, HttpUrl, Field, field_validator
 
 
@@ -99,6 +99,7 @@ class AIConfig(BaseModel):
 
     provider: AIProvider
     provider_chain: Optional[str] = None
+    scoring_profile: Literal["general", "investor"] = "general"
     model: str
     base_url: Optional[str] = None
     api_key_env: str

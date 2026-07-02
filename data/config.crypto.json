@@ -1,0 +1,190 @@
+{
+    "version":  "1.0",
+    "ai":  {
+               "provider":  "deepseek",
+               "model":  "deepseek-chat",
+               "api_key_env":  "DEEPSEEK_API_KEY",
+               "temperature":  0.3,
+               "max_tokens":  4096,
+               "throttle_sec":  0,
+               "analysis_concurrency":  4,
+               "enrichment_concurrency":  2,
+               "languages":  [
+                                 "en",
+                                 "zh"
+                             ]
+           },
+    "email":  {
+                  "sender_name":  "Horizon Crypto",
+                  "enabled":  false,
+                  "smtp_port":  465,
+                  "imap_server":  "",
+                  "unsubscribe_keyword":  "UNSUBSCRIBE",
+                  "smtp_server":  "",
+                  "subscribe_keyword":  "SUBSCRIBE",
+                  "email_address":  "",
+                  "imap_port":  993
+              },
+    "sources":  {
+                    "reddit":  {
+                                   "enabled":  true,
+                                   "subreddits":  [
+                                                      {
+                                                          "subreddit":  "CryptoCurrency",
+                                                          "sort":  "hot",
+                                                          "fetch_limit":  20,
+                                                          "min_score":  10,
+                                                          "category":  "crypto"
+                                                      },
+                                                      {
+                                                          "subreddit":  "Bitcoin",
+                                                          "sort":  "hot",
+                                                          "fetch_limit":  15,
+                                                          "min_score":  10,
+                                                          "category":  "crypto"
+                                                      },
+                                                      {
+                                                          "subreddit":  "ethereum",
+                                                          "sort":  "hot",
+                                                          "fetch_limit":  15,
+                                                          "min_score":  10,
+                                                          "category":  "crypto"
+                                                      },
+                                                      {
+                                                          "subreddit":  "defi",
+                                                          "sort":  "hot",
+                                                          "fetch_limit":  15,
+                                                          "min_score":  5,
+                                                          "category":  "crypto"
+                                                      }
+                                                  ],
+                                   "fetch_comments":  3
+                               },
+                    "rss":  [
+                                {
+                                    "name":  "CoinDesk",
+                                    "url":  "https://www.coindesk.com/arc/outboundfeeds/rss/",
+                                    "enabled":  true,
+                                    "category":  "crypto"
+                                },
+                                {
+                                    "name":  "CoinTelegraph",
+                                    "url":  "https://cointelegraph.com/rss",
+                                    "enabled":  true,
+                                    "category":  "crypto"
+                                },
+                                {
+                                    "name":  "Decrypt",
+                                    "url":  "https://decrypt.co/feed",
+                                    "enabled":  true,
+                                    "category":  "crypto"
+                                },
+                                {
+                                    "name":  "The Block",
+                                    "url":  "https://www.theblock.co/rss.xml",
+                                    "enabled":  true,
+                                    "category":  "crypto"
+                                },
+                                {
+                                    "name":  "CryptoSlate",
+                                    "url":  "https://cryptoslate.com/feed/",
+                                    "enabled":  true,
+                                    "category":  "crypto"
+                                }
+                            ],
+                    "hackernews":  {
+                                       "enabled":  true,
+                                       "fetch_top_stories":  20,
+                                       "min_score":  50
+                                   },
+                    "github":  [
+                                   {
+                                       "type":  "repo_releases",
+                                       "owner":  "bitcoin",
+                                       "repo":  "bitcoin",
+                                       "enabled":  true
+                                   },
+                                   {
+                                       "type":  "repo_releases",
+                                       "owner":  "ethereum",
+                                       "repo":  "go-ethereum",
+                                       "enabled":  true
+                                   },
+                                   {
+                                       "type":  "repo_releases",
+                                       "owner":  "bitcoin",
+                                       "repo":  "bips",
+                                       "enabled":  true
+                                   },
+                                   {
+                                       "type":  "repo_releases",
+                                       "owner":  "Uniswap",
+                                       "repo":  "v3-core",
+                                       "enabled":  true
+                                   }
+                               ],
+                    "twitter":  {
+                                    "enabled":  false
+                                },
+                    "telegram":  {
+                                     "enabled":  false
+                                 },
+                    "openbb":  {
+                                   "enabled":  true,
+                                   "watchlists":  [
+                                                      {
+                                                          "name":  "crypto-majors",
+                                                          "enabled":  true,
+                                                          "provider":  "yfinance",
+                                                          "fetch_limit":  30,
+                                                          "category":  "crypto",
+                                                          "symbols":  [
+                                                                          "BTC-USD",
+                                                                          "ETH-USD",
+                                                                          "SOL-USD",
+                                                                          "XRP-USD",
+                                                                          "ADA-USD",
+                                                                          "DOGE-USD",
+                                                                          "DOT-USD",
+                                                                          "AVAX-USD"
+                                                                      ]
+                                                      }
+                                                  ]
+                               },
+                    "ossinsight":  {
+                                       "enabled":  false
+                                   }
+                },
+    "filtering":  {
+                      "ai_score_threshold":  6.0,
+                      "time_window_hours":  24,
+                      "max_items":  20,
+                      "category_groups":  {
+                                              "crypto":  {
+                                                             "name":  "Crypto / Web3",
+                                                             "limit":  10,
+                                                             "categories":  [
+                                                                                "crypto"
+                                                                            ]
+                                                         },
+                                              "tech":  {
+                                                           "name":  "Technology",
+                                                           "limit":  5,
+                                                           "categories":  [
+                                                                              "technology"
+                                                                          ]
+                                                       }
+                                          },
+                      "default_group":  "other",
+                      "default_group_limit":  3
+                  },
+    "webhook":  {
+                    "enabled":  true,
+                    "url_env":  "HORIZON_WEBHOOK_URL",
+                    "delivery":  "summary",
+                    "platform":  "feishu",
+                    "layout":  "collapsible",
+                    "fallback_layout":  "markdown",
+                    "languages":  null
+                }
+}

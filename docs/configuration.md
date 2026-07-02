@@ -123,6 +123,21 @@ Available models: `MiniMax-M3`, `MiniMax-M2.7`, `MiniMax-M2.7-highspeed`
 
 Use the [DashScope compatible-mode](https://help.aliyun.com/zh/dashscope/developer-reference/use-dashscope-by-calling-openai-api) endpoint. Set `DASHSCOPE_API_KEY` in your `.env`. Optional: set `base_url` to override the default `https://dashscope.aliyuncs.com/compatible-mode/v1`.
 
+### AI scoring profile
+
+Horizon supports two scoring modes for the AI analyzer:
+
+```json
+{
+  "ai": {
+    "scoring_profile": "investor"
+  }
+}
+```
+
+- `general`: Default mode. Prioritizes technically novel, insightful, or broadly interesting content.
+- `investor`: Re-ranks toward market relevance. It rewards policy, earnings, regulation, funding, launches with commercial impact, geopolitics, and macro/liquidity signals. It also down-ranks tutorial-style explainers or technical deep-dives that are informative but unlikely to act as direct market catalysts.
+
 ### AI throttling
 
 If your model has a strict per-minute request cap, you can slow the scorer down in `data/config.json`:

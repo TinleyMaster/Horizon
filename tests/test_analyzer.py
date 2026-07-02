@@ -94,3 +94,51 @@ def test_analyze_batch_concurrent_preserves_order(monkeypatch):
     result = asyncio.run(analyzer.analyze_batch(items))
 
     assert [item.id for item in result] == [item.id for item in items]
+
+
+def test_analyze_item_uses_investor_prompt_profile(monkeypatch):
+    captured = {}
+
+    class FakeClient:
+        def __init__(self):
+            self.config = SimpleNamespace(scoring_profile="investor")
+
+        async def complete(self, system, user):
+            captured["system"] = system
+            captured["user"] = user
+            return '{"score": 8, "reason": "Material catalyst", "summary": "Company guidance moved", "tags": ["earnings"]}'
+
+    analyzer = ContentAnalyzer(FakeClient())
+    item = _make_item("rss:test:prompt")
+
+    asyncio.run(analyzer._analyze_item(item))
+
+    assert "Investor-mode scoring rules" in captured["system"]
+    assert item.ai_score == 8.0
+
+
+def test_investor_mode_penalizes_tutorial_style_content():
+    analyzer = ContentAnalyzer(SimpleNamespace(config=SimpleNamespace(scoring_profile="investor")))
+    item = _make_item("rss:test:tutorial")
+    item.title = "Interactive deep dive into combustion engines"
+    item.ai_summary = "A detailed explainer of how internal combustion engines work."
+    item.ai_reason = "High-quality engineering walkthrough."
+    item.ai_score = 8.0
+
+    analyzer._apply_post_analysis_adjustments(item)
+
+    assert item.ai_score == 6.5
+    assert "background or tutorial content" in item.ai_reason
+
+
+def test_investor_mode_keeps_market_catalyst_score():
+    analyzer = ContentAnalyzer(SimpleNamespace(config=SimpleNamespace(scoring_profile="investor")))
+    item = _make_item("rss:test:earnings")
+    item.title = "Nvidia earnings beat lifts AI spending forecast"
+    item.ai_summary = "The company raised guidance and boosted capex expectations."
+    item.ai_reason = "Important sector catalyst."
+    item.ai_score = 8.0
+
+    analyzer._apply_post_analysis_adjustments(item)
+
+    assert item.ai_score == 8.0

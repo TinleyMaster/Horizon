@@ -59,6 +59,16 @@ Consider:
 - Engagement signals: high upvotes/favorites with substantive discussion indicate community-validated importance
 """
 
+INVESTOR_CONTENT_ANALYSIS_APPENDIX = """
+
+Investor-mode scoring rules:
+- Prioritize content that can move asset prices, earnings expectations, policy outlook, sector positioning, capital spending, regulation, liquidity, or risk appetite.
+- Reward macro policy, regulation, geopolitics, company earnings/guidance, fundraising, product launches with commercial impact, supply-chain changes, and major adoption signals.
+- Penalize content that is mainly educational, tutorial-style, historical, explanatory, or a technical deep-dive without a clear market, policy, company, or industry catalyst.
+- A high-quality article is NOT automatically high-importance for investors. If the item mainly improves understanding but lacks a trading or fundamental catalyst, keep the score modest.
+- For investor mode, scores of 7+ should usually indicate a plausible market or industry impact, not just intellectual interest.
+"""
+
 CONTENT_ANALYSIS_USER = """Analyze the following content and provide a JSON response with:
 - score (0-10): Importance score
 - reason: Brief explanation for the score (mention discussion quality if comments are provided)
@@ -80,6 +90,12 @@ Respond with valid JSON only:
   "summary": "<one-sentence-summary>",
   "tags": ["<tag1>", "<tag2>", ...]
 }}"""
+
+
+def get_content_analysis_system(scoring_profile: str = "general") -> str:
+    if scoring_profile == "investor":
+        return CONTENT_ANALYSIS_SYSTEM + INVESTOR_CONTENT_ANALYSIS_APPENDIX
+    return CONTENT_ANALYSIS_SYSTEM
 
 CONCEPT_EXTRACTION_SYSTEM = """You identify technical concepts in news that a reader might not know.
 Given a news item, return 1-3 search queries for concepts that need explanation.
